@@ -1,3 +1,7 @@
+import wasm from 'vite-plugin-wasm'
+import topLevelAwait from 'vite-plugin-top-level-await'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -19,6 +23,28 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/google-fonts'
   ],
+  ssr: false,
+  runtimeConfig: {
+    BASE_API_URL: process.env.BASE_API_URL
+  },
+  vite: {
+    plugins: [
+      wasm(),
+      topLevelAwait(),
+      nodePolyfills({
+        // Specific modules that should not be polyfilled.
+        exclude: [],
+        // Whether to polyfill specific globals.
+        globals: {
+          Buffer: true, // can also be 'build', 'dev', or false
+          global: true,
+          process: true
+        },
+        // Whether to polyfill `node:` protocol imports.
+        protocolImports: true
+      })
+    ]
+  },
   components: [
     {
       path: '~/components',

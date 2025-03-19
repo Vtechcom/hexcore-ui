@@ -10,7 +10,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@cardano-sdk/core": "^0.45.5",
+    "@cardano-sdk/crypto": "^0.2.3",
+    "@cardano-sdk/util": "^0.16.0",
     "@element-plus/nuxt": "^1.1.1",
+    "@emurgo/cardano-serialization-lib-browser": "^14.1.1",
     "@nuxt/content": "3.3.0",
     "@nuxt/eslint": "1.2.0",
     "@nuxt/fonts": "0.11.0",
@@ -22,11 +26,15 @@
     "@pinia/nuxt": "^0.10.1",
     "@unhead/vue": "2.0.0-rc.13",
     "@vueuse/nuxt": "^13.0.0",
+    "axios": "^1.8.3",
+    "bignumber.js": "^9.1.2",
+    "buffer": "^6.0.3",
     "eslint": "^9.22.0",
     "jsencrypt": "^3.3.2",
     "nuxt": "^3.16.0",
     "nuxt-lodash": "^2.5.3",
     "nuxt-svgo": "^4.0.15",
+    "pbkdf2": "^3.1.2",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
@@ -40,8 +48,14 @@
     "@unocss/preset-legacy-compat": "0.65.4",
     "@unocss/preset-rem-to-px": "0.65.4",
     "@unocss/preset-typography": "0.65.4",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "unocss": "0.65.4"
+    "sass-embedded": "^1.86.0",
+    "unocss": "0.65.4",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-wasm": "^3.4.1"
   }
 }
