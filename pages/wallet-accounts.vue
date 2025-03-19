@@ -35,7 +35,9 @@
     <div class="mb-4 flex items-center justify-between px-3">
       <div class="text-sm">Total: {{ tableData.length }}</div>
       <div class="flex">
-        <el-button type="primary">Create account</el-button>
+        <el-button type="primary" @click="usePopupState(Popup.POPUP_CREATE_WALLET_ACCOUNT, 'open')">
+          Create account
+        </el-button>
       </div>
     </div>
     <el-table
@@ -89,6 +91,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <popup-create-wallet-account />
   </div>
 </template>
 

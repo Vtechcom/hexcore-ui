@@ -28,6 +28,7 @@
     "@vueuse/nuxt": "^13.0.0",
     "axios": "^1.8.3",
     "bignumber.js": "^9.1.2",
+    "bip39": "^3.1.0",
     "buffer": "^6.0.3",
     "eslint": "^9.22.0",
     "jsencrypt": "^3.3.2",
