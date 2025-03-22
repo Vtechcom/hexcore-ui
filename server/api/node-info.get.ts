@@ -4,6 +4,8 @@ export default defineEventHandler(async event => {
   try {
     // const Authorization = getRequestAuthorization(event)
     const rs = await $axios.get('/hydra-main/node-info')
+    console.log('>>> / rs:', rs)
+
     return rs
   } catch (error: any) {
     setResponseStatus(event, error.status || 400)

@@ -54,4 +54,4 @@ const hexcoreApiUrl = process.env.BASE_API_URL
 if (!hexcoreApiUrl) {
   console.error('BASE_API_URL is not defined')
 }
-export const $axios = new AxiosInstance('', process.env.BASE_API_URL).instance
+export const $axios = new AxiosInstance('', 'http://localhost:3010').instance
