@@ -4,4 +4,11 @@ export type HydraNode = {
   port: number
   vkey: string
   createdAt: string
+  status: 'ACTIVE' | 'INACTIVE'
+  cardanoWallet: {
+    id: number
+    baseAddress: string
+    pointerAddress: string
+    createdAt: string
+  }
 }
