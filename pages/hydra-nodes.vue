@@ -5,7 +5,7 @@
   const { data, status } = useLazyFetch<{ data: { data: HydraNode[]; hasNextpage: boolean } }>('/api/nodes/list', {
     query: {
       page: 1,
-      limit: 10
+      limit: 50
     }
   })
   const nodes = computed(() => data.value?.data.data ?? [])
