@@ -1,3 +1,12 @@
+<script lang="ts" setup>
+  import { useAccountStore } from '~/stores/account'
+
+  const accountStore = useAccountStore()
+  onMounted(() => {
+    accountStore.getListAccount()
+  })
+</script>
+
 <template>
   <el-container class="min-h-100svh">
     <el-header height="64px" class="main-header">

@@ -65,7 +65,7 @@
 </script>
 
 <template>
-  <base-popup :name="Popup.POPUP_CREATE_WALLET_ACCOUNT" show-footer>
+  <base-popup :name="Popup.POPUP_CREATE_WALLET_ACCOUNT" show-footer append-body>
     <div class="p-4">
       <el-form
         ref="refForm"

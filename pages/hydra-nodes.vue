@@ -1,34 +1,47 @@
 <script lang="ts" setup>
   import CounterCard from '~/components/shared/CounterCard.vue'
+  import PopupCreateHydraNode from '~/components/shared/PopupCreateHydraNode.vue'
   import type { HydraNode } from '~/interfaces/api/hydra-nodes/hydra-node.type'
 
-  const { data, status } = useLazyFetch<{ data: { data: HydraNode[]; hasNextpage: boolean } }>('/api/nodes/list', {
-    query: {
-      page: 1,
-      limit: 50
+  const { data, status, refresh } = useLazyFetch<{ data: { data: HydraNode[]; hasNextpage: boolean } }>(
+    '/api/nodes/list',
+    {
+      query: {
+        page: 1,
+        limit: 50
+      }
     }
-  })
+  )
   const nodes = computed(() => data.value?.data.data ?? [])
+
+  const totalNodes = computed(() => nodes.value.length)
+  const runningNodes = computed(() => nodes.value.filter(node => node.status === 'ACTIVE').length)
+  const availableNodes = computed(() => nodes.value.filter(node => node.status === 'INACTIVE').length)
+
+  function handleCreateSuccess() {
+    refresh()
+  }
 </script>
 
 <template>
   <div class="">
+    <PopupCreateHydraNode @success="handleCreateSuccess" />
     <el-row :gutter="16" class="h-30">
       <el-col :span="8" class="">
-        <CounterCard title="Total nodes" :value="0" />
+        <CounterCard title="Total nodes" :value="totalNodes" />
       </el-col>
       <el-col :span="8" class="">
-        <CounterCard title="Running nodes" :value="0" />
+        <CounterCard title="Running nodes" :value="runningNodes" />
       </el-col>
       <el-col :span="8" class="">
-        <CounterCard title="Available nodes" :value="0" />
+        <CounterCard title="Available nodes" :value="availableNodes" />
       </el-col>
     </el-row>
     <div class="mt-8">
       <div class="flex justify-between">
         <div class=""></div>
         <div class="flex">
-          <el-button type="primary"> Create </el-button>
+          <el-button type="primary" @click="usePopupState(Popup.POPUP_CREATE_HYDRA_NODE, 'open')"> Create </el-button>
         </div>
       </div>
     </div>

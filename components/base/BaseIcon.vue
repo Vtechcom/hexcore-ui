@@ -1,5 +1,11 @@
 <template>
-  <span class="nuxt-icon" :style="{ 'font-size': `${size}px` }" :class="{ 'nuxt-icon--fill': filled }" @click="emit('click')" v-html="icon" />
+  <span
+    class="nuxt-icon"
+    :style="{ 'font-size': `${size}px` }"
+    :class="{ 'nuxt-icon--fill': filled }"
+    @click="emit('click')"
+    v-html="icon"
+  />
 </template>
 
 <script setup lang="ts">

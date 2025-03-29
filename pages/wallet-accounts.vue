@@ -6,10 +6,11 @@
   import BigNumber from 'bignumber.js'
   import type { CreateAccount } from '~/interfaces/api/accounts/create.type'
 
-  const { data: walletAccounts, status } = useLazyFetch<{ data: WalletAccount[] }>('/api/accounts/list-accounts')
+  const accountStore = useAccountStore()
+  const { accounts: walletAccounts, isLoading } = storeToRefs(accountStore)
 
   const tableData = computed(() => {
-    const data = walletAccounts.value?.data ? walletAccounts.value.data : []
+    const data = walletAccounts.value ? walletAccounts.value : []
     return data.sort((a, b) => b.id - a.id)
   })
 
@@ -32,10 +33,10 @@
   }
 
   const onCreateAccountSuccess = (account: CreateAccount) => {
-    if (!walletAccounts.value?.data || !walletAccounts.value) {
-      walletAccounts.value = { data: [] }
+    if (!walletAccounts.value || !walletAccounts.value) {
+      walletAccounts.value = []
     }
-    walletAccounts.value.data.unshift({
+    walletAccounts.value.unshift({
       ...account,
       utxo: {}
     })
@@ -53,7 +54,7 @@
       </div>
     </div>
     <el-table
-      v-loading="status === 'pending'"
+      v-loading="isLoading"
       :data="tableData"
       style="width: 100%; height: 480px"
       height="480"

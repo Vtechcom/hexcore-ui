@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   const props = defineProps<{
-    status: 'IDLE' | 'ACTIVE' | 'INACTIVE'
+    status: 'IDLE' | 'ACTIVE' | 'INACTIVE' | 'UNKNOWN'
   }>()
 
   const statusText = computed(() => {

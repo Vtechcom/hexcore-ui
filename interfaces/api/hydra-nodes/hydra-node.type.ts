@@ -5,6 +5,7 @@ export type HydraNode = {
   vkey: string
   createdAt: string
   status: 'ACTIVE' | 'INACTIVE'
+  // TODO: change to cardanoAccount
   cardanoWallet: {
     id: number
     baseAddress: string
