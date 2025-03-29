@@ -1,22 +1,66 @@
 <script lang="ts" setup>
+  import type { FormInstance, FormRules } from 'element-plus'
+  import type { CreateAccount, CreateAccountResponse } from '~/interfaces/api/accounts/create.type'
+
   import { generateMnemonic } from '~/utils/cardano'
 
-  const formData = reactive({
+  type FormCreate = {
+    mnemonic: string
+  }
+  const formData = reactive<FormCreate>({
     mnemonic: ''
   })
 
-  const rules = {
+  const rules = ref<FormRules<FormCreate>>({
     mnemonic: [{ required: true, message: 'Please input mnemonic', trigger: 'blur' }]
-  }
+  })
 
-  const refForm = ref(null)
+  const refForm = ref<FormInstance | null>(null)
+
+  const emits = defineEmits<{
+    success: [value: CreateAccount]
+  }>()
 
   const closePopup = () => {
     usePopupState(Popup.POPUP_CREATE_WALLET_ACCOUNT, 'close')
+    formData.mnemonic = ''
   }
 
   const onClickGenerateMnemonic = () => {
     formData.mnemonic = generateMnemonic(24)
+    validateForm()
+  }
+
+  async function validateForm() {
+    return new Promise(resolve => {
+      if (!refForm.value) return
+      refForm.value.validate(valid => {
+        if (valid) {
+          resolve(true)
+        }
+      })
+    })
+  }
+
+  const isCreating = ref(false)
+  const handleCreate = async () => {
+    await validateForm()
+    try {
+      isCreating.value = true
+      const rs = await $fetch<CreateAccountResponse>('/api/accounts/create', {
+        method: 'POST',
+        body: { mnemonic: formData.mnemonic }
+      })
+      if (rs && rs.data) {
+        emits('success', rs.data)
+        ElMessage.success('Create account successfully')
+        closePopup()
+      }
+    } catch (error: any) {
+      ElMessage.error(error?.message)
+    } finally {
+      isCreating.value = false
+    }
   }
 </script>
 
@@ -44,7 +88,9 @@
     <template #footer>
       <div class="flex items-center justify-end p-4">
         <el-button @click="closePopup()">Cancel</el-button>
-        <el-button type="primary">Create</el-button>
+        <el-button type="primary" :disabled="!formData.mnemonic" :loading="isCreating" @click="handleCreate()">
+          Create
+        </el-button>
       </div>
     </template>
   </base-popup>

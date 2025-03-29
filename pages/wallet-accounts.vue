@@ -4,11 +4,13 @@
   import type { WalletAccount } from '~/interfaces/wallet-account.type'
 
   import BigNumber from 'bignumber.js'
+  import type { CreateAccount } from '~/interfaces/api/accounts/create.type'
 
   const { data: walletAccounts, status } = useLazyFetch<{ data: WalletAccount[] }>('/api/accounts/list-accounts')
 
   const tableData = computed(() => {
-    return walletAccounts.value?.data ? walletAccounts.value.data : []
+    const data = walletAccounts.value?.data ? walletAccounts.value.data : []
+    return data.sort((a, b) => b.id - a.id)
   })
 
   const getUtxo = (row: WalletAccount) => {
@@ -27,6 +29,16 @@
     return BigNumber(lovelace)
       .div(10 ** networkInfo.currency.decimals)
       .toFormat()
+  }
+
+  const onCreateAccountSuccess = (account: CreateAccount) => {
+    if (!walletAccounts.value?.data || !walletAccounts.value) {
+      walletAccounts.value = { data: [] }
+    }
+    walletAccounts.value.data.unshift({
+      ...account,
+      utxo: {}
+    })
   }
 </script>
 
@@ -91,7 +103,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <popup-create-wallet-account />
+    <popup-create-wallet-account @success="onCreateAccountSuccess" />
   </div>
 </template>
 
