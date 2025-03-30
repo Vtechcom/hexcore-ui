@@ -15,7 +15,8 @@
           <img src="/images/logo-hexcore-600x600.png" alt="logo" width="32" height="32" />
           <div class="font-600 ml-2 text-xl">Hexcore</div>
         </div>
-        <div class="flex">
+        <div class="flex items-center">
+          <span v-if="accountStore.syncingUtxo" class="mr-2 text-xs text-green-500">Syncing UTxO</span>
           <icon name="ic:round-settings" size="24" />
         </div>
       </div>
