@@ -10,6 +10,7 @@ export const useAccountStore = defineStore('account', () => {
   const accounts = ref<WalletAccount[]>([])
   const isLoading = ref(false)
   const syncingUtxo = ref(false)
+  const syncProgress = ref(0)
 
   const sortedAccounts = computed(() => {
     return [...accounts.value].sort((a, b) => b.id - a.id)
@@ -64,10 +65,8 @@ export const useAccountStore = defineStore('account', () => {
   async function getListAccount() {
     try {
       isLoading.value = true
-      syncingUtxo.value = true
       const rs = await $fetch<ListAccountResponse>('/api/accounts/list-accounts')
       setAccounts(rs.data)
-      syncUtxo()
     } catch (error) {
       console.error(error)
     } finally {
@@ -84,6 +83,8 @@ export const useAccountStore = defineStore('account', () => {
     updateAccountUtxo,
     getListAccount,
     getAccountBalance,
-    syncingUtxo
+    syncingUtxo,
+    syncUtxo,
+    syncProgress
   }
 })

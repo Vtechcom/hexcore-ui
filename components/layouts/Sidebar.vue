@@ -26,6 +26,12 @@
     },
     {
       id: 5,
+      title: 'Consumers',
+      icon: 'ic:round-person',
+      route: '/consumers'
+    },
+    {
+      id: 6,
       title: 'Settings',
       icon: 'ic:round-settings',
       route: '/settings'
@@ -39,11 +45,15 @@
   const handleClose = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
   }
+
+  const defaultActive = computed(() => {
+    return menuItems.value.find(item => item.route === useRoute().path)?.title
+  })
 </script>
 
 <template>
   <el-menu
-    default-active="Dashboard"
+    :default-active="defaultActive"
     class="el-menu-vertical-demo"
     :collapse="isCollapse"
     router

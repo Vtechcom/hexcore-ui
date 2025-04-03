@@ -1,11 +1,10 @@
-import { $axios } from '~/server/utils/axios'
+import { $axiosProxy } from '~/server/utils/axios'
 import type { CreateAccountResponse } from '~/interfaces/api/accounts/create.type'
 
 export default defineEventHandler(async event => {
   try {
-    // const Authorization = getRequestAuthorization(event)
     const body = await readBody(event)
-    const rs = await $axios.post<any, CreateAccountResponse>('/hydra-main/create-account', body)
+    const rs = await $axiosProxy(event).post<any, CreateAccountResponse>('/hydra-main/create-account', body)
     return rs
   } catch (error: any) {
     setResponseStatus(event, error.status || 400)

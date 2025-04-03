@@ -25,7 +25,10 @@ export default defineNuxtConfig({
   ],
   ssr: false,
   runtimeConfig: {
-    BASE_API_URL: process.env.BASE_API_URL
+    BASE_API_URL: process.env.BASE_API_URL,
+    public: {
+      baseUrl: process.env.BASE_URL
+    }
   },
   vite: {
     plugins: [

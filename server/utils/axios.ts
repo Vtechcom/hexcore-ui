@@ -1,6 +1,12 @@
 // Axios instance plugin
 import axios from 'axios'
 
+type AxiosInstanceOptions = {
+  withCredentials?: boolean
+  timeout?: number
+  headers?: Record<string, string>
+}
+
 export class AxiosInstance {
   prefix = ''
   instance = axios.create({
@@ -13,7 +19,7 @@ export class AxiosInstance {
     }
   })
 
-  constructor(prefix: string, endpointUrl?: string) {
+  constructor(prefix: string, endpointUrl?: string, options?: AxiosInstanceOptions) {
     if (process.env.NODE_ENV !== 'production') {
       if (!endpointUrl) {
         console.log(
@@ -29,6 +35,9 @@ export class AxiosInstance {
     // this.instance.defaults.baseURL = 'http://172.20.10.3:8069'
 
     this.instance.defaults.headers.common['Content-Type'] = 'application/json'
+    if (options?.headers) {
+      this.instance.defaults.headers = { ...this.instance.defaults.headers, ...options.headers }
+    }
     // this.instance.defaults.headers.common.Authorization = Cookies.get('accessToken') ? 'Bearer ' + Cookies.get('accessToken') : ''
 
     this.instance.interceptors.request.use(request => {
@@ -55,3 +64,11 @@ if (!hexcoreApiUrl) {
   console.error('BASE_API_URL is not defined')
 }
 export const $axios = new AxiosInstance('', hexcoreApiUrl).instance
+
+export const $axiosProxy = (event: any) => {
+  const headers = getRequestHeaders(event)
+  const proxy = new AxiosInstance('', hexcoreApiUrl, {
+    headers: headers as Record<string, string>
+  }).instance
+  return proxy
+}

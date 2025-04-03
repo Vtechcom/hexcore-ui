@@ -1,9 +1,13 @@
 <script lang="ts" setup>
   const props = defineProps<{
     status: 'IDLE' | 'ACTIVE' | 'INACTIVE' | 'UNKNOWN'
+    statusText?: string
   }>()
 
   const statusText = computed(() => {
+    if (props.statusText) {
+      return props.statusText
+    }
     switch (props.status) {
       case 'IDLE':
         return 'Idle'
