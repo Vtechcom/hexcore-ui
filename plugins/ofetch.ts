@@ -7,6 +7,7 @@ export default defineNuxtPlugin(_nuxtApp => {
     onRequest({ request, options }) {
       options.headers = options.headers || {}
       const token = useLocalStorage('token', '')
+      console.log('>>> / token:', token.value)
       if (token.value && token.value !== 'undefined') {
         options.headers.append('Authorization', `Bearer ${token.value}`)
       }

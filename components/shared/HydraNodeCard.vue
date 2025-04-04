@@ -1,9 +1,15 @@
 <script lang="ts" setup>
   import type { HydraNode } from '~/interfaces/api/hydra-nodes/hydra-node.type'
 
-  const props = defineProps<{
-    node: HydraNode
-  }>()
+  const props = withDefaults(
+    defineProps<{
+      node: HydraNode
+      readonly?: boolean
+    }>(),
+    {
+      readonly: false
+    }
+  )
 
   const getHydraNodeUrl = (port: number) => {
     const host = 'hydranode.hdev99.io.vn'
@@ -15,7 +21,7 @@
   <el-card>
     <div class="flex justify-between">
       <BaseStatus :status="props.node.status" />
-      <icon name="ic:round-delete-sweep" size="24" />
+      <icon v-if="!props.readonly" name="ic:round-delete-sweep" size="24" />
     </div>
     <div class="mt-4">
       <div class="flex items-center">

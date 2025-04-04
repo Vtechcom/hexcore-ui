@@ -123,7 +123,7 @@
     border-radius: 12px;
     background: #fff;
     padding: 0;
-    max-width: min(calc(100vw - 32px), 600px);
+    max-width: min(calc(100vw - 32px), 900px);
     z-index: 100;
 
     &.is-fullscreen {
@@ -172,6 +172,7 @@
         justify-content: center;
         color: #000000;
         font-weight: 600;
+        z-index: 100;
       }
     }
 

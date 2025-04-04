@@ -65,7 +65,7 @@ export const useAccountStore = defineStore('account', () => {
   async function getListAccount() {
     try {
       isLoading.value = true
-      const rs = await $fetch<ListAccountResponse>('/api/accounts/list-accounts')
+      const rs = await $fetch<ListAccountResponse>('/api/accounts/list-accounts', {})
       setAccounts(rs.data)
     } catch (error) {
       console.error(error)
