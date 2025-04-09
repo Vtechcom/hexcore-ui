@@ -28,6 +28,7 @@ export class AxiosInstance {
         )
       } else {
         console.log(`[Develop debugger] Initialized repository endpoint url:`, endpointUrl)
+        console.log(options?.headers)
       }
     }
     this.prefix = prefix
@@ -36,9 +37,10 @@ export class AxiosInstance {
 
     this.instance.defaults.headers.common['Content-Type'] = 'application/json'
     if (options?.headers) {
-      this.instance.defaults.headers = { ...this.instance.defaults.headers, ...options.headers }
+      if (options.headers.authorization) {
+        this.instance.defaults.headers.common.Authorization = options.headers.authorization
+      }
     }
-    // this.instance.defaults.headers.common.Authorization = Cookies.get('accessToken') ? 'Bearer ' + Cookies.get('accessToken') : ''
 
     this.instance.interceptors.request.use(request => {
       return request

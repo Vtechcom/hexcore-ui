@@ -1,5 +1,7 @@
 export const useAuthStore = defineStore('auth', () => {
-  const token = useLocalStorage('token', '')
+  const token = useLocalStorage('token', '', {
+    flush: 'sync'
+  })
   const isAuthenticated = computed(() => !!token.value)
 
   async function auth() {

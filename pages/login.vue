@@ -5,6 +5,8 @@
   })
 
   const isLoading = ref(false)
+  const authStore = useAuthStore()
+  const accountStore = useAccountStore()
 
   const handleSubmit = async () => {
     try {
@@ -15,10 +17,9 @@
       })
 
       // Store token
-      const authStore = useAuthStore()
-      authStore.signIn(response.data.accessToken)
-      const accountStore = useAccountStore()
-      accountStore.getListAccount()
+
+      await authStore.signIn(response.data.accessToken)
+      await accountStore.getListAccount()
       // Redirect to dashboard
       navigateTo('/dashboard')
     } catch (error: any) {
