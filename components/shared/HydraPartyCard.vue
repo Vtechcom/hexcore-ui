@@ -5,6 +5,10 @@
     party: HydraParty
   }>()
 
+  const emits = defineEmits<{
+    refresh: []
+  }>()
+
   const activating = ref(false)
   const handleActivate = async () => {
     if (disableAction.value) {
@@ -17,8 +21,11 @@
       method: 'POST',
       body: { id: props.party.id }
     })
-    ElMessage.success('Hydra party activated successfully')
-    activating.value = false
+    setTimeout(() => {
+      ElMessage.success('Hydra party activated successfully')
+      activating.value = false
+      emits('refresh')
+    }, 8000)
   }
 
   const handleDeactivate = async () => {

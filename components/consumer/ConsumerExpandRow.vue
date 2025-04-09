@@ -95,6 +95,11 @@
       loadingDeleteNode.value = false
     }
   }
+
+  const getEndpointUrl = (mapper: ConsumerInfo['mappers'][number]) => {
+    const endpointWildcard = 'hydranode.io.vn'
+    return `wss://${mapper.consumerKey}.${endpointWildcard}`
+  }
 </script>
 
 <template>
@@ -182,17 +187,30 @@
     <div class="mt-2 flex items-center gap-2">
       <div v-if="mappers.length > 0" class="flex-grow-1 flex overflow-hidden">
         <el-table :data="mappers" :row-class-name="rowClassName" border>
-          <el-table-column prop="consumerKey" label="Key">
+          <el-table-column prop="consumerKey" label="Key" width="160">
             <template #default="{ row }">
               <el-tooltip :content="row.consumerKey" placement="top">
                 <span v-copy="row.consumerKey" class="font-600 font-mono text-xs">
-                  {{ formatId(row.consumerKey, 10, 12) }}
+                  {{ formatId(row.consumerKey, 6, 8) }}
                 </span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="url" label="URL" />
-          <el-table-column prop="isOnline" label="Online" align="center" width="100">
+          <el-table-column prop="url" label="URL">
+            <template #default="{ row }">
+              <div class="flex items-center">
+                <span
+                  v-copy="getEndpointUrl(row)"
+                  class="!text-green-8 bg-gray-3 rounded-1 py-2px cursor-pointer px-2 font-mono text-xs tracking-tighter"
+                >
+                  {{ getEndpointUrl(row) }}
+                </span>
+                <icon name="ic:round-arrow-right-alt" class="mx-1 flex-shrink-0" />
+                <span class="text-xs">{{ row.url }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="isOnline" label="State" align="center" width="100">
             <template #default="{ row }">
               <base-status
                 :status="row.isOnline ? 'ACTIVE' : 'IDLE'"

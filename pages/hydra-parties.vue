@@ -32,14 +32,14 @@
 </script>
 
 <template>
-  <div class="p-6">
+  <div class="p-0">
     <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold">Hydra Parties</h1>
+      <h1 class="m-0 text-2xl font-bold">Hydra Parties</h1>
       <el-button type="primary" @click="openCreatePopup()">Create Party</el-button>
     </div>
 
     <div v-loading="isLoading" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <HydraPartyCard v-for="party in parties" :key="party.id" :party="party" />
+      <HydraPartyCard v-for="party in parties" :key="party.id" :party="party" @refresh="fetchParties" />
     </div>
 
     <popup-create-hydra-party @success="handleCreateSuccess" />
