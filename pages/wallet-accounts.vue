@@ -68,7 +68,7 @@
               {{ row.pointerAddress }}
             </div>
             <template #reference>
-              <nuxt-link :to="`#`">{{ formatId(row.pointerAddress, 6, 12) }}</nuxt-link>
+              <span v-copy="row.pointerAddress" class="cursor-pointer">{{ formatId(row.pointerAddress, 6, 12) }}</span>
             </template>
           </el-popover>
         </template>
@@ -80,7 +80,7 @@
               {{ row.baseAddress }}
             </div>
             <template #reference>
-              <nuxt-link :to="`#`">{{ formatId(row.baseAddress, 6, 12) }}</nuxt-link>
+              <span v-copy="row.baseAddress" class="cursor-pointer">{{ formatId(row.baseAddress, 6, 12) }}</span>
             </template>
           </el-popover>
         </template>
