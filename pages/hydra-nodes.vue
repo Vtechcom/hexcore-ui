@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import CounterCard from '~/components/shared/CounterCard.vue'
   import PopupCreateHydraNode from '~/components/shared/PopupCreateHydraNode.vue'
+  import PopupMonitorHydraNode from '~/components/shared/PopupMonitorHydraNode.vue'
   import type { HydraNode } from '~/interfaces/api/hydra-nodes/hydra-node.type'
 
   const { data, status, refresh } = useLazyFetch<{ data: { data: HydraNode[]; hasNextpage: boolean } }>(
@@ -26,6 +27,7 @@
 <template>
   <div class="">
     <PopupCreateHydraNode @success="handleCreateSuccess" />
+    <PopupMonitorHydraNode />
     <el-row :gutter="16" class="h-30">
       <el-col :span="8" class="">
         <CounterCard title="Total nodes" :value="totalNodes" />

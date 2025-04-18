@@ -28,7 +28,6 @@ export class AxiosInstance {
         )
       } else {
         console.log(`[Develop debugger] Initialized repository endpoint url:`, endpointUrl)
-        console.log(options?.headers)
       }
     }
     this.prefix = prefix
@@ -51,9 +50,6 @@ export class AxiosInstance {
         return response.data
       },
       async error => {
-        const errResponse = error.response
-        // error response handler
-        console.log('Error response:', errResponse)
         return Promise.reject(error.response)
       }
     )

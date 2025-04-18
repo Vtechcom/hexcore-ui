@@ -11,9 +11,17 @@
     }
   )
 
+  const hydraMonitoringStore = useHydraMonitoringStore()
+
+  const onClickMonitoringNode = () => {
+    hydraMonitoringStore.currentNode = props.node
+    usePopupState(Popup.POPUP_MONITORING_HYDRA_NODE, 'open')
+  }
+
   const getHydraNodeUrl = (port: number) => {
-    const host = 'hydranode.hdev99.io.vn'
-    return `ws://${port}.${host}`
+    // const host = 'hydranode.io.vn'
+    // Wildcard: hydranode-10005.hexcore.io.vn
+    return `wss://hydranode-${port}.hexcore.io.vn`
   }
 </script>
 
@@ -21,7 +29,10 @@
   <el-card>
     <div class="flex justify-between">
       <BaseStatus :status="props.node.status" />
-      <icon v-if="!props.readonly" name="ic:round-delete-sweep" size="24" />
+      <!-- <icon v-if="!props.readonly" name="ic:round-delete-sweep" size="24" /> -->
+      <el-button plain type="info" size="small" @click="onClickMonitoringNode">
+        <icon name="ic:round-monitor" size="20" />
+      </el-button>
     </div>
     <div class="mt-4">
       <div class="flex items-center">
