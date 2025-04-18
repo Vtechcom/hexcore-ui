@@ -19,6 +19,7 @@
     isConnected.value = false
     const wsUrl = `wss://hydranode-${currentNode.value.port}.hexcore.io.vn`
     const httpUrl = `https://hydranode-${currentNode.value.port}.hexcore.io.vn/commits`
+    calculateLatency(httpUrl)
     intervalRefreshLatency.value = setInterval(() => {
       calculateLatency(httpUrl)
     }, 10000)
@@ -246,7 +247,7 @@
     append-body
     @open="onOpenPopup"
     @close="onClosePopup"
-    :content-class="'max-h-80svh'"
+    :content-class="'max-h-[90svh]'"
   >
     <div v-if="currentNode" class="text-secondary font-mono">
       <el-container class="">
