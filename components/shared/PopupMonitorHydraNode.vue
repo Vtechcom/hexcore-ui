@@ -10,14 +10,19 @@
   const ws = ref<WebSocket | null>(null)
   const isConnected = ref(false)
   const loadingHistory = ref(false)
+  const intervalRefreshLatency = ref<any>(null)
 
   const onOpenPopup = () => {
     if (!currentNode.value) {
       return
     }
     isConnected.value = false
-    const url = `wss://hydranode-${currentNode.value.port}.hexcore.io.vn`
-    ws.value = new WebSocket(url)
+    const wsUrl = `wss://hydranode-${currentNode.value.port}.hexcore.io.vn`
+    const httpUrl = `https://hydranode-${currentNode.value.port}.hexcore.io.vn/commits`
+    intervalRefreshLatency.value = setInterval(() => {
+      calculateLatency(httpUrl)
+    }, 10000)
+    ws.value = new WebSocket(wsUrl)
     ws.value.onopen = () => {
       console.log('onopen')
       loadingHistory.value = true
@@ -53,6 +58,7 @@
     if (ws.value?.readyState === WebSocket.OPEN) ws.value?.close()
 
     resetStatistics()
+    clearInterval(intervalRefreshLatency.value)
   }
 
   const commands = ref([
@@ -113,6 +119,7 @@
           ...payload
         })
       )
+      ElMessage.success('Command sent')
     } catch (error) {
       console.log(error)
     }
@@ -127,7 +134,10 @@
     headSnapshot: {},
     headTotalTx: 0,
     headTotalCommitAmount: 0,
-    hydraNodeVersion: ''
+    hydraNodeVersion: '',
+    totalOpenCount: 0,
+    totalPeerDisconnected: 0,
+    latency: ''
   })
   const headMessages = ref<any[]>([])
   const headMessageColumns = ref<any[]>([
@@ -165,7 +175,9 @@
       headSnapshot: {},
       headTotalTx: 0,
       headTotalCommitAmount: 0,
-      hydraNodeVersion: ''
+      hydraNodeVersion: '',
+      totalOpenCount: 0,
+      totalPeerDisconnected: 0
     })
     headMessages.value = []
   }
@@ -177,11 +189,13 @@
   }
 
   const updateStatistics = (message: HydraPayload, idx?: number) => {
+    statistics.headStatus = message.tag
     if (message.tag === HydraHeadTag.TxValid) {
       statistics.headTotalTx++
     } else if (message.tag === HydraHeadTag.HeadIsOpen) {
       statistics.headHash = message.headId
       statistics.headUtxo = message.utxo
+      statistics.totalOpenCount++
     } else if (message.tag === HydraHeadTag.SnapshotConfirmed) {
       statistics.headSnapshot = message.snapshot
     } else if (message.tag === HydraHeadTag.Greetings) {
@@ -192,6 +206,8 @@
         (acc, curr) => acc + curr.value.lovelace,
         0
       )
+    } else if (message.tag === HydraHeadTag.PeerDisconnected) {
+      statistics.totalPeerDisconnected++
     }
     if ('seq' in message) statistics.headSeq = message.seq
 
@@ -207,6 +223,18 @@
         }
       ]
     })
+  }
+
+  const calculateLatency = (url: string) => {
+    const start = Date.now()
+    fetch(url)
+      .then(() => {
+        const latency = Date.now() - start
+        statistics.latency = `${latency}ms`
+      })
+      .catch(() => {
+        statistics.latency = '---'
+      })
   }
 </script>
 
@@ -244,9 +272,7 @@
                 <template #label>
                   <div class="flex w-full items-center justify-between">
                     <span class="text-gray-6 m-0 text-xs font-semibold">{{ payloadObjectKey || 'payload' }}:</span>
-                    <el-button type="primary" size="small" plain text class="ml-2" @click="sendCommand()"
-                      >Send</el-button
-                    >
+                    <el-button type="primary" size="small" plain class="ml-2" @click="sendCommand()"> Send </el-button>
                   </div>
                 </template>
                 <el-input
@@ -269,6 +295,19 @@
                 size="small"
                 body-class="!p-2"
               />
+              <CounterCard
+                title="Head opened count"
+                :value="statistics.totalOpenCount"
+                size="small"
+                body-class="!p-2"
+              />
+              <CounterCard
+                title="Peer disconnected count"
+                :value="statistics.totalPeerDisconnected"
+                size="small"
+                body-class="!p-2"
+              />
+              <CounterCard title="Latency" :value="statistics.latency" size="small" body-class="!p-2" />
             </div>
             <div class="mt-3">
               <el-table-v2
@@ -305,7 +344,7 @@
   </base-popup>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   :deep(.el-form-item--label-top .el-form-item__label) {
     margin-bottom: 0;
     padding: 0;
