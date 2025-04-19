@@ -245,9 +245,9 @@
     :name="Popup.POPUP_MONITORING_HYDRA_NODE"
     :show-footer="false"
     append-body
+    :content-class="'max-h-[90svh]'"
     @open="onOpenPopup"
     @close="onClosePopup"
-    :content-class="'max-h-[90svh]'"
   >
     <div v-if="currentNode" class="text-secondary font-mono">
       <el-container class="">
@@ -264,7 +264,7 @@
             <el-form class="font-mono" size="small">
               <p class="text-gray-6 m-0 text-sm font-semibold">Commands:</p>
               <el-radio-group v-model="formCommand.command" size="small" class="flex flex-col !items-start">
-                <el-radio :value="item.value" size="small" class="!m-0" v-for="item in commands" :key="item.value">{{
+                <el-radio v-for="item in commands" :key="item.value" :value="item.value" size="small" class="!m-0">{{
                   item.label
                 }}</el-radio>
               </el-radio-group>
@@ -312,13 +312,14 @@
             </div>
             <div class="mt-3">
               <el-table-v2
+                v-loading="loadingHistory"
                 :columns="headMessageColumns"
                 :data="headMessages"
                 :estimated-row-height="150"
                 :expand-column-key="headMessageColumns[0].key"
                 :width="658"
                 :height="380"
-                v-loading="loadingHistory"
+                scrollbar-always-on
               >
                 <template #row="props">
                   <TableRow v-bind="props" class="h-12" />
