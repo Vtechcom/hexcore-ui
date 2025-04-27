@@ -5,12 +5,14 @@
       value?: string | number
       size?: 'small' | 'default' | 'large'
       bodyClass?: string
+      loading?: boolean
     }>(),
     {
       title: 'Active nodes',
       value: '0',
       size: 'default',
-      bodyClass: ''
+      bodyClass: '',
+      loading: false
     }
   )
 
@@ -36,7 +38,7 @@
 </script>
 
 <template>
-  <el-card :body-class>
+  <el-card v-loading="loading" :body-class="bodyClass">
     <div class="text-left">
       <div :class="[sizeClasses.title]">{{ title }}</div>
       <div :class="[sizeClasses.value]">{{ value }}</div>

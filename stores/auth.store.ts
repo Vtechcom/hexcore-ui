@@ -5,10 +5,16 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!token.value)
 
   async function auth() {
-    const rs = await $fetch('/api/auth', {
-      method: 'GET'
+    await $fetch('/api/auth', {
+      method: 'GET',
+      onResponseError({ response: { _data } }) {
+        const { status } = _data
+        if (status === 401) {
+          signOut()
+          navigateTo('/login')
+        }
+      }
     })
-    console.log('>>> / rs:', rs)
   }
 
   function signIn(_token: string) {

@@ -1,4 +1,5 @@
 import type { HydraNode } from '~/interfaces/api/hydra-nodes/hydra-node.type'
+import type { HydraParty, HydraPartyResponse } from '~/interfaces/api/hydra-nodes/parties.type'
 
 export const useHydraNodeStore = defineStore('hydra-node', () => {
   const nodes = ref<HydraNode[]>([])
@@ -24,5 +25,24 @@ export const useHydraNodeStore = defineStore('hydra-node', () => {
     }
   }
 
-  return { nodes, totalNodes, runningNodes, availableNodes, fetchNodes, loading }
+  const parties = ref<HydraParty[]>([])
+  const isFetchingParty = ref(false)
+  const fetchParties = async () => {
+    try {
+      isFetchingParty.value = true
+      const rs = await $fetch<HydraPartyResponse>('/api/nodes/parties')
+      parties.value = rs.data
+    } catch (error: any) {
+      ElMessage.error(error?.message)
+    } finally {
+      isFetchingParty.value = false
+    }
+  }
+
+  onMounted(() => {
+    fetchNodes()
+    fetchParties()
+  })
+
+  return { nodes, totalNodes, runningNodes, availableNodes, fetchNodes, loading, parties }
 })
