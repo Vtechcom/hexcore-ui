@@ -27,7 +27,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     BASE_API_URL: process.env.BASE_API_URL,
     public: {
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+      hydraNodeProxyPattern: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_PATTERN,
+      hydraNodeProxySSL: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_SSL === 'true'
     }
   },
   vite: {

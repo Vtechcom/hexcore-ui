@@ -17,13 +17,13 @@
       return
     }
     isConnected.value = false
-    const wsUrl = `wss://hydranode-${currentNode.value.port}.hexcore.io.vn`
-    const httpUrl = `https://hydranode-${currentNode.value.port}.hexcore.io.vn/commits`
+    const wsUrl = getHydraNodeEndpoint(currentNode.value.port).ws
+    const httpUrl = `${getHydraNodeEndpoint(currentNode.value.port).http}/commits`
     calculateLatency(httpUrl)
     intervalRefreshLatency.value = setInterval(() => {
       calculateLatency(httpUrl)
     }, 10000)
-    ws.value = new WebSocket(wsUrl)
+    ws.value = new WebSocket(`${wsUrl}?history=yes`)
     ws.value.onopen = () => {
       console.log('onopen')
       loadingHistory.value = true
@@ -152,7 +152,10 @@
       key: 'tag',
       title: 'Tag',
       dataKey: 'tag',
-      width: 230
+      width: 230,
+      cellRenderer: ({ rowData }: { rowData: any }) => {
+        return rowData.tag || 'Hexcore Connected'
+      }
     },
     {
       key: 'timestamp',
@@ -191,7 +194,11 @@
 
   const updateStatistics = (message: HydraPayload, idx?: number) => {
     statistics.headStatus = message.tag
-    if (message.tag === HydraHeadTag.TxValid) {
+    if (!message.tag || message.tag === HydraHeadTag.Greetings) {
+      console.log(`Greetings`, message)
+      statistics.headStatus = message.headStatus
+      statistics.hydraNodeVersion = message.hydraNodeVersion
+    } else if (message.tag === HydraHeadTag.TxValid) {
       statistics.headTotalTx++
     } else if (message.tag === HydraHeadTag.HeadIsOpen) {
       statistics.headHash = message.headId
@@ -199,9 +206,6 @@
       statistics.totalOpenCount++
     } else if (message.tag === HydraHeadTag.SnapshotConfirmed) {
       statistics.headSnapshot = message.snapshot
-    } else if (message.tag === HydraHeadTag.Greetings) {
-      statistics.headStatus = message.headStatus
-      statistics.hydraNodeVersion = message.hydraNodeVersion
     } else if (message.tag === HydraHeadTag.Committed) {
       statistics.headTotalCommitAmount += Object.values(message.utxo).reduce(
         (acc, curr) => acc + curr.value.lovelace,

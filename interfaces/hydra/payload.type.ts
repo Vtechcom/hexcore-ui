@@ -73,13 +73,16 @@ export type BasePayload = {
 }
 
 export type Greetings = BasePayload & {
-  tag: HydraHeadTag.Greetings
+  tag: HydraHeadTag.Greetings | undefined
   me: {
     vkey: string
   }
   headStatus: HydraHeadStatus
   hydraHeadId: string
   snapshotUtxo: UTxOObject
+  /**
+   * @deprecated
+   */
   timestamp: Date
   hydraNodeVersion: string
 }
