@@ -48,7 +48,10 @@ export default defineNuxtConfig({
         // Whether to polyfill `node:` protocol imports.
         protocolImports: true
       })
-    ]
+    ],
+    optimizeDeps: {
+      include: ['@emurgo/cardano-serialization-lib-browser']
+    }
   },
   components: [
     {
