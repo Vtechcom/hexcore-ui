@@ -1,10 +1,12 @@
 import CardanoWASM from '.'
-import { deserializeTx } from './deserializer'
 
-export const resolveTxHash = (txHex: string) => {
-  const txBody = deserializeTx(txHex).body()
-  const txHash = resolveTxBodyHash(txBody)
-  return txHash.to_hex()
+/**
+ *
+ * @param cborHex Transaction CBOR hex
+ * @returns Transaction Hash in Hex
+ */
+export const resolveTxHash = (cborHex: string) => {
+  return CardanoWASM.FixedTransaction.from_hex(cborHex).transaction_hash().to_hex()
 }
 
 export const resolveTxBodyHash = (txBody: CardanoWASM.TransactionBody) => {
