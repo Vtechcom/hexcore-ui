@@ -21,7 +21,8 @@
   const getHydraNodeUrl = (port: number) => {
     // const host = 'hydranode.io.vn'
     // Wildcard: hydranode-10005.hexcore.io.vn
-    return `wss://hydranode-${port}.hexcore.io.vn`
+    const pattern = useRuntimeConfig().public.hydraNodeProxyPattern
+    return `wss://${pattern.replace('<port>', String(port))}`
   }
 </script>
 
