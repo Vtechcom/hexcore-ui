@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import HydraPartyCard from '~/components/shared/HydraPartyCard.vue'
-  import type { HydraPartyResponse } from '~/interfaces/api/hydra-nodes/parties.type'
+  import type { HydraPartyResponse } from '~/interfaces/api/hydra-nodes/hydra-heads.type'
   import PopupCreateHydraParty from '~/components/shared/PopupCreateHydraParty.vue'
 
   const isLoading = ref(false)

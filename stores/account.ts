@@ -36,11 +36,9 @@ export const useAccountStore = defineStore('account', () => {
 
   function getAccountBalance(account: WalletAccount) {
     const lovelace = Object.keys(account.utxo).reduce((acc, txHash) => {
-      return acc + account.utxo[txHash as TxHash].value.lovelace
-    }, 0)
-    return BigNumber(lovelace)
-      .div(10 ** networkInfo.currency.decimals)
-      .toFormat()
+      return acc.plus(account.utxo[txHash as TxHash].value.lovelace)
+    }, BigNumber(0))
+    return lovelace.div(10 ** networkInfo.currency.decimals).toFormat()
   }
 
   async function fetchAddressUtxo(account: WalletAccount) {

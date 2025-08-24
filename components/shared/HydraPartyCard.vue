@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import type { HydraParty } from '~/interfaces/api/hydra-nodes/parties.type'
+  import type { HydraParty } from '~/interfaces/api/hydra-nodes/hydra-heads.type'
 
   const props = defineProps<{
     party: HydraParty

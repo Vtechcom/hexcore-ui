@@ -1,7 +1,7 @@
 import type { ApiResponse } from '../response-factory.type'
 import type { HydraNode } from './hydra-node.type'
 
-export type HydraParty = {
+export type HydraHead = {
   id: number
   description: string
   nodes: number
@@ -10,4 +10,4 @@ export type HydraParty = {
   hydraNodes: HydraNode[]
 }
 
-export type HydraPartyResponse = ApiResponse<HydraParty[]>
+export type HydraHeadResponse = ApiResponse<HydraHead[]>

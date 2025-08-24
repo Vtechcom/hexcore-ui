@@ -1,4 +1,4 @@
-import type { HydraPartyResponse } from '~/interfaces/api/hydra-nodes/parties.type'
+import type { HydraPartyResponse } from '~/interfaces/api/hydra-nodes/hydra-heads.type'
 import { errorResponseHandler } from '~/server/utils/errorHandler'
 
 export default defineEventHandler(async event => {
