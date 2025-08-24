@@ -25,11 +25,9 @@
 
   const getTotalBalance = (row: WalletAccount) => {
     const lovelace = Object.keys(row.utxo).reduce((acc, txHash) => {
-      return acc + row.utxo[txHash as TxHash].value.lovelace
-    }, 0)
-    return BigNumber(lovelace)
-      .div(10 ** networkInfo.currency.decimals)
-      .toFormat()
+      return acc.plus(row.utxo[txHash as TxHash].value.lovelace)
+    }, BigNumber(0))
+    return lovelace.div(10 ** networkInfo.currency.decimals).toFormat()
   }
 
   const onCreateAccountSuccess = (account: CreateAccount) => {

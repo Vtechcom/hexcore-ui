@@ -4,10 +4,10 @@
   const { data: nodeInfo, status, refresh } = useLazyFetch<NodeInfoResponse>('/api/node-info')
 
   const hydraNodeStore = useHydraNodeStore()
-  const { totalNodes, runningNodes, parties } = storeToRefs(hydraNodeStore)
+  const { runningNodes, hydraHeads } = storeToRefs(hydraNodeStore)
 
-  const runningParties = computed(() => {
-    return parties.value.filter(party => party.status === 'ACTIVE').length
+  const runningHeads = computed(() => {
+    return hydraHeads.value.filter(head => head.status === 'ACTIVE').length
   })
 </script>
 
@@ -25,22 +25,22 @@
       <el-col :span="8" class="">
         <el-card class="h-full">
           <div class="text-left">
-            <div class="text-lg">Running parties</div>
-            <div class="text-2xl">{{ runningParties }}</div>
+            <div class="text-lg">Running heads</div>
+            <div class="text-2xl">{{ runningHeads }}</div>
           </div>
         </el-card>
       </el-col>
       <el-col :span="8" class="">
         <el-card class="h-full">
           <div class="text-left">
-            <div class="text-lg">Total parties</div>
-            <div class="text-2xl">{{ parties.length }}</div>
+            <div class="text-lg">Total heads</div>
+            <div class="text-2xl">{{ hydraHeads.length }}</div>
           </div>
         </el-card>
       </el-col>
     </el-row>
     <NodeTipInfo class="mt-4" :tip="nodeInfo?.data.tip" :loading="status === 'pending'" @refresh="refresh" />
-    <HeadStats class="mt-4" />
+    <!-- <HeadStats class="mt-4" /> -->
   </div>
 </template>
 

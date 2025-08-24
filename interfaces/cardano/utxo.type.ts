@@ -32,6 +32,6 @@ export type UTxOObjectValue = {
   inlineDatumhash?: Nullable<string>
   referenceScript: ReferenceScript
   value: {
-    lovelace: number
+    lovelace: string
   } & Record<string, any>
 }
