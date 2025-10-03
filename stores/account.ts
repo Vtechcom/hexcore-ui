@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 import type { WalletAccount } from '~/interfaces/wallet-account.type'
 import type { CreateAccount } from '~/interfaces/api/accounts/create.type'
 import type { ListAccountResponse } from '~/interfaces/api/accounts/list-account.type'
-import type { TxHash, UTxOObject } from '~/interfaces/cardano'
+import type { TxHash, UTxOObject } from '@hydra-sdk/core'
 import BigNumber from 'bignumber.js'
 import { networkInfo } from '~/constants/chain'
+import type { AddressesUtxoRes } from '~/shared/types/AddressesUtxoRes.type'
 
 export const useAccountStore = defineStore('account', () => {
-  const accounts = ref<WalletAccount[]>([])
+  const accounts = shallowRef<WalletAccount[]>([])
   const isLoading = ref(false)
   const syncingUtxo = ref(false)
   const syncProgress = ref(0)
@@ -18,6 +19,7 @@ export const useAccountStore = defineStore('account', () => {
 
   function setAccounts(newAccounts: WalletAccount[]) {
     accounts.value = newAccounts
+    triggerRef(accounts)
   }
 
   function addAccount(account: CreateAccount) {
@@ -25,34 +27,37 @@ export const useAccountStore = defineStore('account', () => {
       ...account,
       utxo: {}
     })
-  }
-
-  function updateAccountUtxo(accountId: number, utxo: WalletAccount['utxo']) {
-    const account = accounts.value.find(acc => acc.id === accountId)
-    if (account) {
-      account.utxo = utxo
-    }
+    triggerRef(accounts)
   }
 
   function getAccountBalance(account: WalletAccount) {
     const lovelace = Object.keys(account.utxo).reduce((acc, txHash) => {
-      return acc.plus(account.utxo[txHash as TxHash].value.lovelace)
+      return acc.plus((account.utxo[txHash as TxHash].value as { lovelace: number }).lovelace)
     }, BigNumber(0))
     return lovelace.div(10 ** networkInfo.currency.decimals).toFormat()
-  }
-
-  async function fetchAddressUtxo(account: WalletAccount) {
-    const rs = await $fetch<{ data: UTxOObject }>(`/api/accounts/utxo/${account.pointerAddress}`)
-    updateAccountUtxo(account.id, rs.data)
   }
 
   async function syncUtxo() {
     try {
       syncingUtxo.value = true
-      const queries = accounts.value.map(account => {
-        return fetchAddressUtxo(account)
+      const rs = await $fetch<AddressesUtxoRes>(`/api/accounts/utxos`, {
+        method: 'GET',
+        query: {
+          addresses: accounts.value.map(acc => acc.pointerAddress)
+        }
       })
-      await Promise.all(queries)
+      console.log('>>> / rs:', rs)
+
+      const newData = accounts.value.map(acc => {
+        const utxos = rs.data.data.filter(utxo => utxo.address === acc.pointerAddress).map(parseOgmiosUtxoToObject)
+        const newUtxo: UTxOObject = {}
+        utxos.forEach(u => {
+          Object.assign(newUtxo, u)
+        })
+        acc.utxo = newUtxo
+        return acc
+      })
+      setAccounts(newData)
     } catch (error) {
       console.error(error)
     } finally {
@@ -78,7 +83,6 @@ export const useAccountStore = defineStore('account', () => {
     sortedAccounts,
     setAccounts,
     addAccount,
-    updateAccountUtxo,
     getListAccount,
     getAccountBalance,
     syncingUtxo,

@@ -1,4 +1,4 @@
-import type { UTxOObject } from '~/interfaces/hydra/utxo.type'
+import type { UTxOObject } from '@hydra-sdk/core'
 
 export type HeadMessage = {
   headId: string

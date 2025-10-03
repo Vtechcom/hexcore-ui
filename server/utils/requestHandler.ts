@@ -10,6 +10,8 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
       // do something after the route handler
       return { response }
     } catch (err) {
+      console.log('>>> / err:', err)
+
       // Error handling
       return { err }
     }

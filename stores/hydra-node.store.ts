@@ -30,7 +30,7 @@ export const useHydraNodeStore = defineStore('hydra-node', () => {
   const fetchHeads = async () => {
     try {
       isFetchingHead.value = true
-      const rs = await $fetch<HydraHeadResponse>('/api/nodes/parties')
+      const rs = await $fetch<HydraHeadResponse>('/api/nodes/heads')
       hydraHeads.value = rs.data
     } catch (error: any) {
       ElMessage.error(error?.message)

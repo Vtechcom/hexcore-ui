@@ -5,7 +5,7 @@ export default defineEventHandler(async event => {
     const rs = await $axios.get('/hydra-main/utxo/' + address)
     return rs
   } catch (error) {
-    console.error(error)
-    return errorResponseHandler(event, error)
+    console.error('>>> /api/accounts/utxo/[address].get error:', error)
+    return errorResponseHandler(error, event)
   }
 })
