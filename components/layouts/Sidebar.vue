@@ -20,9 +20,9 @@
     },
     {
       id: 4,
-      title: 'Hydra Parties',
+      title: 'Hydra Heads',
       icon: 'ic:round-account-tree',
-      route: '/hydra-parties'
+      route: '/hydra-heads'
     },
     {
       id: 5,

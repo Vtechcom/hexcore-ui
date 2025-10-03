@@ -1,5 +1,6 @@
 {
-  "name": "nuxt-app",
+  "name": "hexcore-ui",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,6 +16,8 @@
     "@element-plus/nuxt": "^1.1.1",
     "@emurgo/cardano-serialization-lib-browser": "^14.1.1",
     "@highlightjs/vue-plugin": "^2.1.0",
+    "@hydra-sdk/cardano-wasm": "^0.0.5",
+    "@hydra-sdk/core": "^1.1.0",
     "@nuxt/content": "3.3.0",
     "@nuxt/eslint": "1.2.0",
     "@nuxt/fonts": "0.11.0",
@@ -31,6 +34,7 @@
     "bignumber.js": "^9.1.2",
     "bip39": "^3.1.0",
     "buffer": "^6.0.3",
+    "cytoscape": "^3.33.1",
     "eslint": "^9.22.0",
     "highlight.js": "^11.11.1",
     "jsencrypt": "^3.3.2",
@@ -39,8 +43,10 @@
     "nuxt-svgo": "^4.0.15",
     "pbkdf2": "^3.1.2",
     "pinia": "^3.0.1",
+    "serialize-error": "^12.0.0",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "zod": "^4.1.11"
   },
   "packageManager": "pnpm@9.15.4+sha1.ffa0b5c573381e8035b354028ccff97c8e452047",
   "devDependencies": {

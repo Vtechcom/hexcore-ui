@@ -1,4 +1,4 @@
-import type { UTxOObject } from './cardano'
+import type { UTxOObject } from '@hydra-sdk/core'
 
 export type WalletAccount = {
   id: number

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
   import { networkInfo } from '~/constants/chain'
-  import type { TxHash } from '~/interfaces/cardano'
   import type { WalletAccount } from '~/interfaces/wallet-account.type'
 
   import BigNumber from 'bignumber.js'
   import type { CreateAccount } from '~/interfaces/api/accounts/create.type'
+  import type { TxHash } from '@hydra-sdk/core'
 
   const accountStore = useAccountStore()
   const { accounts: walletAccounts, isLoading } = storeToRefs(accountStore)
@@ -25,7 +25,7 @@
 
   const getTotalBalance = (row: WalletAccount) => {
     const lovelace = Object.keys(row.utxo).reduce((acc, txHash) => {
-      return acc.plus(row.utxo[txHash as TxHash].value.lovelace)
+      return acc.plus((row.utxo[txHash as TxHash].value as { lovelace: number }).lovelace)
     }, BigNumber(0))
     return lovelace.div(10 ** networkInfo.currency.decimals).toFormat()
   }
@@ -71,7 +71,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="baseAddress" label="Base address">
+      <el-table-column prop="baseAddress" label="Base address bech32">
         <template #default="{ row }">
           <el-popover width="auto" placement="top">
             <div class="text-nowrap text-sm">

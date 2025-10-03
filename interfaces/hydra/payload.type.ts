@@ -1,5 +1,5 @@
 import type { Transaction } from './transaction.type'
-import type { UTxOObject } from './utxo.type'
+import type { UTxOObject } from '@hydra-sdk/core'
 
 // export type HydraHeadStatus  = 'Idle' | 'Initializing' | 'Open' | 'Closed' | 'FanoutPossible' | 'Final'
 export enum HydraHeadStatus {

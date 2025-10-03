@@ -35,7 +35,7 @@
           nodes: form.value.cardanoAccountIds.length
         }
       })
-      ElMessage.success('Hydra party created successfully')
+      ElMessage.success('Hydra head created successfully')
       emit('success')
       closePopup()
     } catch (error: any) {
@@ -46,13 +46,13 @@
   }
 
   const closePopup = () => {
-    usePopupState(Popup.POPUP_CREATE_HYDRA_PARTY, 'close')
+    usePopupState(Popup.POPUP_CREATE_HYDRA_HEAD, 'close')
     form.value.cardanoAccountIds = []
   }
 </script>
 
 <template>
-  <base-popup :name="Popup.POPUP_CREATE_HYDRA_PARTY" show-footer append-body>
+  <base-popup :name="Popup.POPUP_CREATE_HYDRA_HEAD" show-footer append-body>
     <div class="p-4">
       <el-form
         ref="refForm"
@@ -93,7 +93,7 @@
         <div class="text-gray-7 text-sm">
           <div>
             <span class="font-bold">Note:</span>
-            The accounts you select will be used to create the hydra party.
+            The accounts you select will be used to create the hydra head.
           </div>
         </div>
       </el-form>

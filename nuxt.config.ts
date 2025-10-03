@@ -1,6 +1,7 @@
 import wasm from 'vite-plugin-wasm'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { version } from './package.json'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -27,6 +28,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     BASE_API_URL: process.env.BASE_API_URL,
     public: {
+      appVersion: process.env.APP_VERSION || version,
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
       hydraNodeProxyPattern: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_PATTERN,
       hydraNodeProxySSL: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_SSL === 'true'
