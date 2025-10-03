@@ -9,3 +9,10 @@ export const getHydraNodeEndpoint = (port: number) => {
     http: endpoint
   }
 }
+
+export const getHydraNodeUrl = (port: number) => {
+  // const host = 'hydranode.io.vn'
+  // Wildcard: hydranode-10005.hexcore.io.vn
+  const pattern = useRuntimeConfig().public.hydraNodeProxyPattern
+  return `wss://${pattern.replace('<port>', String(port))}`
+}

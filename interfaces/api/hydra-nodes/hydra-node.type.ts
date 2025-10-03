@@ -6,7 +6,7 @@ export type HydraNode = {
   createdAt: string
   status: 'ACTIVE' | 'INACTIVE'
   // TODO: change to cardanoAccount
-  cardanoWallet: {
+  cardanoAccount: {
     id: number
     baseAddress: string
     pointerAddress: string

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import type { HydraHead } from '~/interfaces/api/hydra-nodes/hydra-heads.type'
+  import HeadVisualizeClient from './HeadVisualize.client.vue'
 
   const props = defineProps<{
     head: HydraHead
@@ -16,20 +17,64 @@
       return
     }
 
-    activating.value = true
-    await $fetch('/api/nodes/active-party', {
-      method: 'POST',
-      body: { id: props.head.id }
-    })
-    setTimeout(() => {
-      ElMessage.success('Hydra head activated successfully')
+    try {
+      activating.value = true
+      await $fetch('/api/nodes/active-party', {
+        method: 'POST',
+        body: { id: props.head.id }
+      })
+    } catch (err: any) {
+      console.log('>>> / err:', err)
+
+      ElMessage.error('Failed to activate Hydra head')
       activating.value = false
-      emits('refresh')
-    }, 8000)
+    } finally {
+      setTimeout(() => {
+        ElMessage.success('Hydra head activated successfully')
+        activating.value = false
+        emits('refresh')
+      }, 8000)
+    }
   }
 
-  const handleDeactivate = async () => {
-    ElMessage.warning('This feature is not available yet')
+  const onDeactivating = ref(false)
+  const handleDeactivateHead = async () => {
+    try {
+      onDeactivating.value = true
+      await $fetch('/api/nodes/deactive-head', {
+        method: 'POST',
+        body: { id: props.head.id }
+      })
+      setTimeout(() => {
+        ElMessage.success('Hydra head deactivated successfully')
+        onDeactivating.value = false
+        emits('refresh')
+      }, 3000)
+    } catch (error) {
+      console.log('>>> / error:', error)
+      ElMessage.error('Failed to deactivate Hydra head')
+      onDeactivating.value = false
+    }
+  }
+
+  const onClearing = ref(false)
+  const handleClearPersistence = async () => {
+    try {
+      onClearing.value = true
+      await $fetch('/api/nodes/clear-head-persistences', {
+        method: 'POST',
+        body: { ids: [props.head.id] }
+      })
+      setTimeout(() => {
+        ElMessage.success('Hydra head cleared successfully')
+        onClearing.value = false
+        emits('refresh')
+      }, 3000)
+    } catch (error) {
+      console.log('>>> / error:', error)
+      ElMessage.error('Failed to deactivate Hydra head')
+      onClearing.value = false
+    }
   }
 
   const disableAction = computed(() => {
@@ -49,7 +94,7 @@
 
 <template>
   <el-card class="!overflow-unset relative w-full">
-    <div class="rounded-1 bg-blue-2 absolute -top-3 left-0 min-w-10 shadow-sm">
+    <div class="rounded-1 bg-blue-2 absolute -top-3 left-1 min-w-10 shadow-sm">
       <p class="m-0 px-1 text-center text-base">#{{ head.id }}</p>
     </div>
     <div class="flex items-center justify-between">
@@ -72,30 +117,66 @@
           <el-button
             text
             plain
-            :disabled="disableAction"
+            :disabled="disableAction || head.status === 'ACTIVE'"
             size="small"
             class="!m-0 !px-2 hover:cursor-pointer"
             :class="[head.status === 'ACTIVE' ? 'hover:!text-error-400' : 'hover:!text-green-400']"
             @click="handleActivate"
           >
-            <icon v-if="head.status === 'INACTIVE'" name="ic:round-play-arrow" class="text-inherit" />
-            <icon v-else name="ic:round-stop" class="text-inherit" @click="handleDeactivate" />
+            <icon name="ic:round-play-arrow" class="text-inherit" />
           </el-button>
         </div>
         <div
           class="border-gray-3 rounded-1 flex items-center border border-solid"
           :class="{ 'opacity-50': disableAction }"
         >
-          <el-button
-            text
-            plain
-            :disabled="disableAction"
-            size="small"
-            class="hover:text-gray-6 !m-0 !px-2 hover:cursor-pointer"
-            @click="null"
+          <el-popover
+            placement="bottom-end"
+            title=""
+            width="auto"
+            trigger="hover"
+            popper-class="!p-2 !rounded-2 !min-w-unset"
           >
-            <icon name="ic:round-more-vert" class="" />
-          </el-button>
+            <template #reference>
+              <el-button
+                text
+                plain
+                :disabled="disableAction"
+                size="small"
+                class="hover:text-gray-6 !m-0 !px-2 hover:cursor-pointer"
+                @click="null"
+              >
+                <icon name="ic:round-more-vert" class="" />
+              </el-button>
+            </template>
+            <div class="flex flex-col gap-2">
+              <div class="text-xs font-semibold">More actions</div>
+              <el-button
+                type="danger"
+                plain
+                :disabled="disableAction || onDeactivating || head.status !== 'ACTIVE'"
+                size="small"
+                class="hover:text-gray-6 !m-0 !px-2 hover:cursor-pointer"
+                :loading="onDeactivating"
+                @click="handleDeactivateHead"
+              >
+                <div class="w-25 mr-1">Stop</div>
+                <icon name="ic:round-stop-circle" class="" v-if="!onDeactivating" />
+              </el-button>
+              <el-button
+                type="danger"
+                plain
+                :disabled="disableAction"
+                size="small"
+                class="hover:text-gray-6 !m-0 !px-2 hover:cursor-pointer"
+                :loading="onClearing"
+                @click="handleClearPersistence"
+              >
+                <div class="w-25 mr-1">Clear persistences</div>
+                <icon name="ic:round-cleaning-services" class="" v-if="!onClearing" />
+              </el-button>
+            </div>
+          </el-popover>
         </div>
       </div>
     </div>
@@ -118,35 +199,51 @@
         </el-tooltip>
       </div>
     </div>
-
-    <div v-if="head.hydraNodes?.length" class="mt-4">
-      <div class="text-gray-7 mb-2 text-sm">Hydra Nodes</div>
-      <div class="bg-gray-1 min-h-60 w-full rounded">
-        <div class="grid grid-cols-3 gap-4 p-4">
+    <div class="text-gray-7 mb-2 text-sm">Hydra Nodes</div>
+    <el-tabs type="border-card" model-value="visualize">
+      <el-tab-pane label="Visualize" class="!p-0" name="visualize" lazy>
+        <div v-if="head.hydraNodes?.length">
+          <HeadVisualizeClient :head="head" />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="Ports" name="ports">
+        <div class="h-60 space-y-2 p-3">
           <div
             v-for="node in head.hydraNodes"
             :key="node.id"
-            class="border-gray-3 relative flex flex-col items-center justify-center rounded border border-solid p-2 shadow"
+            class="text-md-semibold bg-blue-1 rounded-1 flex items-center justify-between px-2 py-1 font-mono"
           >
-            <icon name="ic:round-layers" class="text-gray-7 size-10" />
-            <!-- <div class="flex items-center">
-              <div>#{{ node.id }}</div>
-              <div class="text-gray-7 ml-4">{{ '' }}</div>
-            </div> -->
-            <div>#{{ node.id }}</div>
-            <div class="text-gray-7 text-sm-bold flex items-center space-x-1">
-              <icon name="ic:round-route" class="mr-1 size-4" />
-              {{ node.port }}
+            <div class="flex items-center justify-center gap-4">
+              <span class="">#{{ node.id }}</span>
+              <icon name="ic:sharp-settings-ethernet" class="size-5" />
+              <span class="">{{ getHydraNodeUrl(node.port) }}</span>
             </div>
+
+            <el-popover placement="top-start" title="" :width="400" trigger="hover" popper-class="!p-0 !rounded-2">
+              <template #reference>
+                <icon name="ic:round-info" class="size-5" />
+              </template>
+              <template #default>
+                <HydraNodeCard :node="{ ...node, status: head.status }" readonly />
+              </template>
+            </el-popover>
           </div>
         </div>
-      </div>
-    </div>
+      </el-tab-pane>
+      <el-tab-pane label="Detail" name="detail">
+        <div class="h-60">
+          <pre class="bg-gray-1 m-0 h-full overflow-auto rounded p-2 text-xs">{{ JSON.stringify(head, null, 2) }}</pre>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </el-card>
 </template>
 
 <style lang="scss" scoped>
   .el-card {
     border-radius: 8px;
+  }
+  :deep(.el-tabs--border-card > .el-tabs__content) {
+    padding: 0;
   }
 </style>

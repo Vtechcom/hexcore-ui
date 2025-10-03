@@ -35,7 +35,10 @@
   <div class="p-0">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="m-0 text-2xl font-bold">Hydra Heads</h1>
-      <el-button type="primary" @click="openCreatePopup()">Create</el-button>
+      <div class="flex items-center justify-between">
+        <el-button type="primary" @click="openCreatePopup()">Create</el-button>
+        <el-button type="info" @click="fetchHydraHeads">Refresh</el-button>
+      </div>
     </div>
 
     <div v-loading="isLoading" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -44,6 +47,7 @@
 
     <PopupCreateHydraHead @success="handleCreateSuccess" />
   </div>
+  <PopupMonitorHydraNode />
 </template>
 
 <style lang="scss" scoped></style>

@@ -29,7 +29,7 @@
 <template>
   <el-card>
     <div class="flex justify-between">
-      <BaseStatus :status="props.node.status" />
+      <BaseStatus :status="props.node?.status || 'UNKNOWN'" />
       <!-- <icon v-if="!props.readonly" name="ic:round-delete-sweep" size="24" /> -->
       <el-button plain type="info" size="small" @click="onClickMonitoringNode">
         <icon name="ic:round-monitor" size="20" />
@@ -53,11 +53,11 @@
           <div class="text-xs">
             <div class="flex items-center">
               <span class="text-gray-6 font-500">Pointer addr:</span>
-              <span class="ml-2">{{ formatId(props.node.cardanoWallet.pointerAddress, 12, 12) }}</span>
+              <span class="ml-2">{{ formatId(props.node.cardanoAccount.pointerAddress, 12, 12) }}</span>
             </div>
             <div class="mt-2 flex items-center">
               <span class="text-gray-6 font-500">Base addr:</span>
-              <span class="ml-2">{{ formatId(props.node.cardanoWallet.baseAddress, 12, 12) }}</span>
+              <span class="ml-2">{{ formatId(props.node.cardanoAccount.baseAddress, 12, 12) }}</span>
             </div>
             <div class="mt-4 flex justify-end">
               <el-button size="small">
@@ -72,7 +72,7 @@
                 <icon name="ic:baseline-account-balance-wallet" size="20" />
               </span>
               <span class="text-blue-4 ml-2 text-sm">{{
-                formatId(props.node.cardanoWallet.pointerAddress, 4, 8)
+                formatId(props.node.cardanoAccount.pointerAddress, 4, 8)
               }}</span>
             </div>
           </template>

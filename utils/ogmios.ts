@@ -1,5 +1,5 @@
 import { type TxHash, type UTxOObject, ParserUtils } from '@hydra-sdk/core'
-import CardanoWASM from '~/lib/hydra-wallet/utils/cardano-wasm'
+import { CardanoWASM } from '@hydra-sdk/cardano-wasm'
 import type { OgmiosAddressUtxo } from '~/shared/types/AddressesUtxoRes.type'
 
 export function parseOgmiosUtxoToObject(utxo: OgmiosAddressUtxo): UTxOObject {
