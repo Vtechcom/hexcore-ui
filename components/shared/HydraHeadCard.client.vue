@@ -216,7 +216,7 @@
             <div class="flex items-center justify-center gap-4">
               <span class="">#{{ node.id }}</span>
               <icon name="ic:sharp-settings-ethernet" class="size-5" />
-              <span class="">{{ getHydraNodeUrl(node.port) }}</span>
+              <span class="">{{ getHydraNodeEndpoint(node.port).ws }}</span>
             </div>
 
             <el-popover placement="top-start" title="" :width="400" trigger="hover" popper-class="!p-0 !rounded-2">

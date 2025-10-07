@@ -17,13 +17,6 @@
     hydraMonitoringStore.currentNode = props.node
     usePopupState(Popup.POPUP_MONITORING_HYDRA_NODE, 'open')
   }
-
-  const getHydraNodeUrl = (port: number) => {
-    // const host = 'hydranode.io.vn'
-    // Wildcard: hydranode-10005.hexcore.io.vn
-    const pattern = useRuntimeConfig().public.hydraNodeProxyPattern
-    return `wss://${pattern.replace('<port>', String(port))}`
-  }
 </script>
 
 <template>
@@ -42,7 +35,7 @@
       </div>
       <div class="mt-2 flex items-center">
         <span class="text-gray-6 text-sm-bold">Endpoint:</span>
-        <span class="text-blue-4 ml-2 text-sm">{{ getHydraNodeUrl(props.node.port) }}</span>
+        <span class="text-blue-4 ml-2 text-sm">{{ getHydraNodeEndpoint(props.node.port).ws }}</span>
       </div>
       <div class="mt-2 flex items-center">
         <span class="text-gray-6 text-sm-bold">Description:</span>
