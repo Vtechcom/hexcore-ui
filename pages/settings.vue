@@ -8,7 +8,8 @@
 </script>
 
 <template>
-  <div class="">
+  <div>
+    <base-breadcrumb :items="[{ text: 'Settings', to: '/settings' }]" />
     <el-button type="primary" @click="handleSignOut">Sign Out</el-button>
   </div>
 </template>

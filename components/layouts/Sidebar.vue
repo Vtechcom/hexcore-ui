@@ -38,6 +38,10 @@
     }
   ])
 
+  const emit = defineEmits<{
+    (event: 'clickItem'): void
+  }>()
+
   const isCollapse = ref(false)
   const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
@@ -53,32 +57,20 @@
 
 <template>
   <el-menu
+    class="el-menu-vertical-demo !border-none"
     :default-active="defaultActive"
-    class="el-menu-vertical-demo"
     :collapse="isCollapse"
     router
     @open="handleOpen"
     @close="handleClose"
   >
-    <!-- <el-sub-menu index="1">
-      <template #title>
-        <el-icon><location /></el-icon>
-        <span>Navigator One</span>
-      </template>
-      <el-menu-item-group>
-        <template #title><span>Group One</span></template>
-        <el-menu-item index="1-1">item one</el-menu-item>
-        <el-menu-item index="1-2">item two</el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="Group Two">
-        <el-menu-item index="1-3">item three</el-menu-item>
-      </el-menu-item-group>
-      <el-sub-menu index="1-4">
-        <template #title><span>item four</span></template>
-        <el-menu-item index="1-4-1">item one</el-menu-item>
-      </el-sub-menu>
-    </el-sub-menu> -->
-    <el-menu-item v-for="item in menuItems" :key="item.id" :index="item.title" :route="item.route">
+    <el-menu-item
+      v-for="item in menuItems"
+      :key="item.id"
+      :index="item.title"
+      :route="item.route"
+      @click="emit('clickItem')"
+    >
       <icon :name="item.icon" size="24" class="mr-2" />
       <template #title>{{ item.title }}</template>
     </el-menu-item>

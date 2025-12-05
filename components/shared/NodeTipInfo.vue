@@ -33,7 +33,7 @@
 </script>
 
 <template>
-  <el-card style="max-width: 480px">
+  <el-card>
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-600 text-lg">Tip</span>
@@ -53,7 +53,7 @@
         <span class="font-500 text-base">Era:</span>
         <span class="ml-2">{{ tip.era }}</span>
       </div>
-      <div class="mt-4 grid grid-cols-2 gap-4">
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
         <div class="bg-gray-3 rounded-2 flex flex-col p-3">
           <span class="font-500 text-base">Epoch</span>
           <span>{{ tip.epoch }}</span>

@@ -3,6 +3,7 @@ export const useAuthStore = defineStore('auth', () => {
     flush: 'sync'
   })
   const isAuthenticated = computed(() => !!token.value)
+  const userInfo = ref(null)
 
   async function auth() {
     await $fetch('/api/auth', {
@@ -12,6 +13,11 @@ export const useAuthStore = defineStore('auth', () => {
         if (status === 401) {
           signOut()
           navigateTo('/login')
+        }
+      },
+      onResponse({ response: { _data } }) {
+        if (_data.data) {
+          userInfo.value = _data.data
         }
       }
     })

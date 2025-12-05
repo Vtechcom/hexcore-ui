@@ -35,13 +35,14 @@
 
 <template>
   <div class="consumers-page">
-    <div class="mb-4 flex items-center justify-between">
-      <h1 class="m0 text-2xl font-semibold">Consumers</h1>
-      <el-button type="primary" size="small" @click="fetchConsumers">
-        <icon name="ic:refresh" class="mr-1" />
-        Refresh
-      </el-button>
-    </div>
+    <base-breadcrumb :items="[{ text: 'Consumers', to: '/consumers' }]">
+      <template #right-content>
+        <el-button type="primary" @click="fetchConsumers">
+          <icon name="ic:refresh" class="mr-1" />
+          Refresh
+        </el-button>
+      </template>
+    </base-breadcrumb>
 
     <el-table v-loading="loading" :data="consumers" stripe row-key="id" lazy>
       <el-table-column width="80" type="expand">
