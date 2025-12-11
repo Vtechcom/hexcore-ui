@@ -53,7 +53,7 @@
 
     <el-table v-loading="isLoading" stripe :border="true" :data="tableData" height="480" class="font-mono">
       <el-table-column prop="id" label="ID" width="50" align="center" />
-      <el-table-column prop="pointerAddress" min-width="200" label="Pointer address">
+      <el-table-column prop="pointerAddress" min-width="200" label="Enterprise Address">
         <template #default="{ row }">
           <el-popover width="auto" placement="top">
             <div class="text-nowrap text-sm">
