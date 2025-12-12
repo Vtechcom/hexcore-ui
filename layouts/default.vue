@@ -14,7 +14,8 @@
       return
     } else {
       await authStore.auth()
-      accountStore.getListAccount()
+      await accountStore.getListAccount()
+      await accountStore.syncUtxo()
     }
   })
 </script>

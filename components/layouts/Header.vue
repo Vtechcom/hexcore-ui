@@ -18,7 +18,13 @@
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <el-button type="default" size="small" plain @click="accountStore.syncUtxo">
+        <el-button
+          :disabled="accountStore.syncingUtxo"
+          type="default"
+          size="small"
+          plain
+          @click="accountStore.syncUtxo"
+        >
           <icon
             v-if="accountStore.syncingUtxo"
             name="ic:round-refresh"
