@@ -25,12 +25,6 @@
       route: '/hydra-heads'
     },
     {
-      id: 5,
-      title: 'Consumers',
-      icon: 'ic:round-person',
-      route: '/consumers'
-    },
-    {
       id: 6,
       title: 'Settings',
       icon: 'ic:round-settings',

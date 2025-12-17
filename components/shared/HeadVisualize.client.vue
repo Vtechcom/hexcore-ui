@@ -36,6 +36,8 @@
 
     cy.value = cytoscape({
       container: cyContainer.value,
+      minZoom: 0.7,
+      maxZoom: 1,
 
       elements: [
         // L1 and Ogmios - fixed position
