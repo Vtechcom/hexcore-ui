@@ -37,29 +37,46 @@ export const useAccountStore = defineStore('account', () => {
     return lovelace.div(10 ** networkInfo.currency.decimals).toFormat()
   }
 
+  async function getUtxoByBatch(batchAddresses: string[]) {
+    try {
+      const rs = await $fetch<AddressesUtxoRes>(`/api/accounts/utxos`, {
+        method: 'GET',
+        query: { addresses: batchAddresses }
+      })
+
+      const updatedAccounts = accounts.value.map(account => {
+        if (batchAddresses.includes(account.pointerAddress)) {
+          const utxos = rs.data.data
+            .filter(utxo => utxo.address === account.pointerAddress)
+            .map(parseOgmiosUtxoToObject)
+
+          const mergedUtxo: UTxOObject = {}
+          utxos.forEach(u => Object.assign(mergedUtxo, u))
+
+          return {
+            ...account,
+            utxo: mergedUtxo
+          }
+        }
+        return account
+      })
+
+      setAccounts(updatedAccounts)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   async function syncUtxo() {
     try {
       syncingUtxo.value = true
-      const rs = await $fetch<AddressesUtxoRes>(`/api/accounts/utxos`, {
-        method: 'GET',
-        query: {
-          addresses: accounts.value.map(acc => acc.pointerAddress)
-        }
-      })
-      console.log('>>> / rs:', rs)
-
-      const newData = accounts.value.map(acc => {
-        const utxos = rs.data.data.filter(utxo => utxo.address === acc.pointerAddress).map(parseOgmiosUtxoToObject)
-        const newUtxo: UTxOObject = {}
-        utxos.forEach(u => {
-          Object.assign(newUtxo, u)
-        })
-        acc.utxo = newUtxo
-        return acc
-      })
-      setAccounts(newData)
-    } catch (error) {
-      console.error(error)
+      const walletAddresses = accounts.value.map(acc => acc.pointerAddress)
+      for (let i = 0; i < walletAddresses.length; i += 3) {
+        const batch = walletAddresses.slice(i, i + 3)
+        await getUtxoByBatch(batch)
+      }
+    } catch (e) {
+      console.error(e)
     } finally {
       syncingUtxo.value = false
     }
