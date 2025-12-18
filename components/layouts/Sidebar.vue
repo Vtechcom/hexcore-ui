@@ -32,11 +32,25 @@
     }
   ])
 
+  const props = withDefaults(
+    defineProps<{
+      applyCollapse?: boolean
+    }>(),
+    {
+      applyCollapse: true
+    }
+  )
+
   const emit = defineEmits<{
     (event: 'clickItem'): void
   }>()
 
-  const isCollapse = ref(false)
+  const collapse = useState<boolean>('collapse-sidebar', () => false)
+
+  const isCollapse = computed(() => {
+    return props.applyCollapse ? collapse.value : false
+  })
+
   const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
   }
@@ -51,7 +65,7 @@
 
 <template>
   <el-menu
-    class="el-menu-vertical-demo !border-none"
+    class="el-menu-vertical-demo !border-none pt-3"
     :default-active="defaultActive"
     :collapse="isCollapse"
     router
@@ -63,9 +77,13 @@
       :key="item.id"
       :index="item.title"
       :route="item.route"
+      class="gap-2"
       @click="emit('clickItem')"
     >
-      <icon :name="item.icon" size="24" class="mr-2" />
+      <el-icon class="flex items-center justify-center">
+        <icon :name="item.icon" size="24" class="" />
+      </el-icon>
+
       <template #title>{{ item.title }}</template>
     </el-menu-item>
   </el-menu>
@@ -74,7 +92,7 @@
 <style lang="scss" scoped>
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
-    min-height: 400px;
-    height: 100%;
+    /* min-height: 400px;
+    height: 100%; */
   }
 </style>

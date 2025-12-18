@@ -31,7 +31,8 @@ export default defineNuxtConfig({
       appVersion: process.env.APP_VERSION || version,
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
       hydraNodeProxyPattern: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_PATTERN,
-      hydraNodeProxySSL: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_SSL === 'true'
+      hydraNodeProxySSL: process.env.NUXT_PUBLIC_HYDRA_NODE_PROXY_SSL === 'true',
+      environment: process.env.ENVIRONMENT || 'development'
     }
   },
   vite: {
