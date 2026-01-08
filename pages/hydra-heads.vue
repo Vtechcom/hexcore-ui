@@ -9,7 +9,7 @@
   const fetchHydraHeads = async () => {
     try {
       isLoading.value = true
-      const rs = await $fetch<HydraHeadResponse>('/api/nodes/heads')
+      const rs = await $fetch<HydraHeadResponse>('/api/heads')
       heads.value = rs.data
     } catch (error: any) {
       ElMessage.error(error?.message)

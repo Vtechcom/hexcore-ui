@@ -1,8 +1,7 @@
 <script lang="ts" setup>
   import type { FormInstance, FormRules } from 'element-plus'
   import type { CreateAccount, CreateAccountResponse } from '~/interfaces/api/accounts/create.type'
-
-  import { generateMnemonic } from '~/utils/cardano'
+  import { AppWallet } from '@hydra-sdk/core'
 
   type FormCreate = {
     mnemonic: string
@@ -27,7 +26,7 @@
   }
 
   const onClickGenerateMnemonic = () => {
-    formData.mnemonic = generateMnemonic(24)
+    formData.mnemonic = AppWallet.brew(256)?.join(' ')
     validateForm()
   }
 
@@ -66,6 +65,7 @@
 
 <template>
   <base-popup :name="Popup.POPUP_CREATE_WALLET_ACCOUNT" show-footer append-body>
+    <template #title> Create Wallet Account </template>
     <div class="p-4">
       <el-form
         ref="refForm"

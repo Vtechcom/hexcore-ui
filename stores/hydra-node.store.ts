@@ -16,7 +16,7 @@ export const useHydraNodeStore = defineStore('hydra-node', () => {
   const fetchNodes = async () => {
     try {
       loading.value = true
-      const rs = await $fetch<{ data: { data: HydraNode[]; hasNextpage: boolean } }>('/api/nodes/list', {
+      const rs = await $fetch<{ data: { data: HydraNode[]; hasNextpage: boolean } }>('/api/nodes', {
         query: {
           page: 1,
           limit: 50
@@ -33,7 +33,7 @@ export const useHydraNodeStore = defineStore('hydra-node', () => {
   const fetchHeads = async () => {
     try {
       isFetchingHead.value = true
-      const rs = await $fetch<HydraHeadResponse>('/api/nodes/heads')
+      const rs = await $fetch<HydraHeadResponse>('/api/heads')
       hydraHeads.value = rs.data
     } catch (error: any) {
       ElMessage.error(error?.message)

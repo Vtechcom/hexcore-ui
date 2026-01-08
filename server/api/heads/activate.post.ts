@@ -1,7 +1,7 @@
 export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
-    const rs = await $axiosProxy(event).post('/hydra-main/clear-party-data', body)
+    const rs = await $axiosProxy(event).post('/hydra-heads/active', body)
     return rs
   } catch (error) {
     errorResponseHandler(error, event)
