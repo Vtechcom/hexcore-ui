@@ -25,7 +25,8 @@ export const useAccountStore = defineStore('account', () => {
   function addAccount(account: CreateAccount) {
     accounts.value.unshift({
       ...account,
-      utxo: {}
+      utxo: {},
+      mnemonic: ''
     })
     triggerRef(accounts)
   }

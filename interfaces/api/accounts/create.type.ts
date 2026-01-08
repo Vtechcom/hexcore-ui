@@ -5,6 +5,7 @@ export type CreateAccount = {
   pointerAddress: string
   id: number
   createdAt: string
+  mnemonic: string
 }
 
 export type CreateAccountResponse = ApiResponse<CreateAccount>

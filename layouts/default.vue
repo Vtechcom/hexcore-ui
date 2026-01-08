@@ -5,6 +5,8 @@
 
   const accountStore = useAccountStore()
   const authStore = useAuthStore()
+  const config = useRuntimeConfig()
+  const isCollapse = useState<boolean>('collapse-sidebar', () => false)
 
   const isAuthenticated = computed(() => authStore.isAuthenticated)
 
@@ -15,7 +17,9 @@
     } else {
       await authStore.auth()
       await accountStore.getListAccount()
-      await accountStore.syncUtxo()
+      if (config.public.environment !== 'development') {
+        await accountStore.syncUtxo()
+      }
     }
   })
 </script>
@@ -23,11 +27,9 @@
 <template>
   <el-container class="min-h-100svh">
     <Header />
-
     <el-container class="z-10 pt-16">
-      <el-aside class="hidden sm:block" width="200px">
-        <sidebar />
-      </el-aside>
+      <sidebar class="!fixed hidden h-full flex-shrink-0 sm:block" />
+      <div :class="isCollapse ? 'w-16' : 'w-50'" class="hidden flex-shrink-0 transition-all duration-500 sm:block" />
       <el-main>
         <slot></slot>
       </el-main>

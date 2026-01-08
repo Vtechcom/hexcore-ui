@@ -20,7 +20,7 @@
         />
         <span>Quoc Huy</span>
       </div>
-      <sidebar @click-item="modelValue = false" />
+      <sidebar :apply-collapse="false" @click-item="modelValue = false" />
       <div class="text-center">
         <el-button type="danger" @click="handleSignOut">Sign Out</el-button>
       </div>

@@ -248,90 +248,85 @@
     width="960px"
     :name="Popup.POPUP_MONITORING_HYDRA_NODE"
     :show-footer="false"
+    show-header
     append-body
     :content-class="'max-h-[90svh]'"
     @open="onOpenPopup"
     @close="onClosePopup"
   >
+    <template #title>
+      <div class="flex items-center font-semibold">
+        Monitoring:
+        <span class="text-gray-5 ml-1">
+          [{{ statistics.headStatus }}] [{{ loadingHistory ? 'Loading history...' : statistics.headHash }}]
+        </span>
+      </div>
+    </template>
+
     <div v-if="currentNode" class="text-secondary font-mono">
       <el-container class="">
-        <el-header class="border-b-solid border-secondary flex items-center border-b !px-4" height="48px">
-          <div class="flex items-center font-semibold">
-            Monitoring:
-            <span class="text-gray-5 font-medium">
-              [{{ statistics.headStatus }}] [{{ loadingHistory ? 'Loading history...' : statistics.headHash }}]
-            </span>
-          </div>
-        </el-header>
-        <el-container class="">
-          <el-aside width="200px" class="border-r-solid border-secondary border-r px-4 py-2">
-            <el-form class="font-mono" size="small">
-              <p class="text-gray-6 m-0 text-sm font-semibold">Commands:</p>
-              <el-radio-group v-model="formCommand.command" size="small" class="flex flex-col !items-start">
-                <el-radio v-for="item in commands" :key="item.value" :value="item.value" size="small" class="!m-0">{{
-                  item.label
-                }}</el-radio>
-              </el-radio-group>
+        <el-aside width="200px" class="border-r-solid border-secondary border-r px-4 py-2">
+          <el-form class="font-mono" size="small">
+            <p class="text-gray-6 m-0 text-sm font-semibold">Commands:</p>
+            <el-radio-group v-model="formCommand.command" size="small" class="flex flex-col !items-start">
+              <el-radio v-for="item in commands" :key="item.value" :value="item.value" size="small" class="!m-0">{{
+                item.label
+              }}</el-radio>
+            </el-radio-group>
 
-              <el-form-item label-position="top" class="mt-2">
-                <template #label>
-                  <div class="flex w-full items-center justify-between">
-                    <span class="text-gray-6 m-0 text-xs font-semibold">{{ payloadObjectKey || 'payload' }}:</span>
-                    <el-button type="primary" size="small" plain class="ml-2" @click="sendCommand()"> Send </el-button>
-                  </div>
-                </template>
-                <el-input
-                  v-model="formCommand.payload"
-                  :disabled="!payloadObjectKey"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 9 }"
-                  class="mt-1"
-                />
-              </el-form-item>
-            </el-form>
-          </el-aside>
-          <el-main class="!px-4 !py-2">
-            <div class="grid grid-cols-3 gap-2 font-mono">
-              <CounterCard title="Sequence" :value="statistics.headSeq" size="small" body-class="!p-2" />
-              <CounterCard title="Total Tx" :value="statistics.headTotalTx" size="small" body-class="!p-2" />
-              <CounterCard
-                title="Total commit amount"
-                :value="`${BigNumber(statistics.headTotalCommitAmount).div(1e6).toFormat(6)} ADA`"
-                size="small"
-                body-class="!p-2"
+            <el-form-item label-position="top" class="mt-2">
+              <template #label>
+                <div class="flex w-full items-center justify-between">
+                  <span class="text-gray-6 m-0 text-xs font-semibold">{{ payloadObjectKey || 'payload' }}:</span>
+                  <el-button type="primary" size="small" plain class="ml-2" @click="sendCommand()"> Send </el-button>
+                </div>
+              </template>
+              <el-input
+                v-model="formCommand.payload"
+                :disabled="!payloadObjectKey"
+                type="textarea"
+                :autosize="{ minRows: 3, maxRows: 9 }"
+                class="mt-1"
               />
-              <CounterCard
-                title="Head opened count"
-                :value="statistics.totalOpenCount"
-                size="small"
-                body-class="!p-2"
-              />
-              <CounterCard
-                title="Peer disconnected count"
-                :value="statistics.totalPeerDisconnected"
-                size="small"
-                body-class="!p-2"
-              />
-              <CounterCard title="Latency" :value="statistics.latency" size="small" body-class="!p-2" />
-            </div>
-            <div class="mt-3">
-              <el-table-v2
-                v-loading="loadingHistory"
-                :columns="headMessageColumns"
-                :data="headMessages"
-                :estimated-row-height="150"
-                :expand-column-key="headMessageColumns[0].key"
-                :width="658"
-                :height="380"
-                scrollbar-always-on
-              >
-                <template #row="props">
-                  <TableRow v-bind="props" class="h-12" />
-                </template>
-              </el-table-v2>
-            </div>
-          </el-main>
-        </el-container>
+            </el-form-item>
+          </el-form>
+        </el-aside>
+        <el-main class="!px-4 !py-2">
+          <div class="grid grid-cols-3 gap-2 font-mono">
+            <CounterCard title="Sequence" :value="statistics.headSeq" size="small" body-class="!p-2" />
+            <CounterCard title="Total Tx" :value="statistics.headTotalTx" size="small" body-class="!p-2" />
+            <CounterCard
+              title="Total commit amount"
+              :value="`${BigNumber(statistics.headTotalCommitAmount).div(1e6).toFormat(6)} ADA`"
+              size="small"
+              body-class="!p-2"
+            />
+            <CounterCard title="Head opened count" :value="statistics.totalOpenCount" size="small" body-class="!p-2" />
+            <CounterCard
+              title="Peer disconnected count"
+              :value="statistics.totalPeerDisconnected"
+              size="small"
+              body-class="!p-2"
+            />
+            <CounterCard title="Latency" :value="statistics.latency" size="small" body-class="!p-2" />
+          </div>
+          <div class="mt-3">
+            <el-table-v2
+              v-loading="loadingHistory"
+              :columns="headMessageColumns"
+              :data="headMessages"
+              :estimated-row-height="150"
+              :expand-column-key="headMessageColumns[0].key"
+              :width="658"
+              :height="380"
+              scrollbar-always-on
+            >
+              <template #row="props">
+                <TableRow v-bind="props" class="h-12" />
+              </template>
+            </el-table-v2>
+          </div>
+        </el-main>
       </el-container>
       <div class="flex items-center justify-between px-4 py-2">
         <span class="text-[10px]">

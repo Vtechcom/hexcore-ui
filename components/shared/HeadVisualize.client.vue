@@ -20,7 +20,7 @@
         { data: { id: String(node.id), label: `#${node.id}` } },
         {
           data: { id: `l${index + 1}`, source: String(node.id), target: 'layer1' },
-          style: { 'line-color': '#81a9ff', 'line-style': 'dashed' }
+          classes: 'dashed'
         }
       )
       if (props.head.hydraNodes.length > 1) {
@@ -45,13 +45,13 @@
           data: { id: 'layer1', label: 'L1' },
           position: { x: 10, y: 0 },
           // locked: true,
-          style: { shape: 'rectangle', 'background-color': '#827ef0' }
+          classes: 'ogmios'
         },
         {
           data: { id: 'ogmios1', label: 'Ogmios' },
           position: { x: 10, y: 80 },
           // locked: true,
-          style: { shape: 'rectangle', 'background-color': '#827ef0' }
+          classes: 'ogmios'
         },
 
         // edges
@@ -84,6 +84,20 @@
             'line-color': '#94a3b8',
             'target-arrow-color': '#94a3b8',
             'curve-style': 'bezier'
+          }
+        },
+        {
+          selector: '.ogmios',
+          style: {
+            shape: 'rectangle',
+            'background-color': '#827ef0'
+          }
+        },
+        {
+          selector: '.dashed',
+          style: {
+            'line-style': 'dashed',
+            'line-color': '#81a9ff'
           }
         }
       ],

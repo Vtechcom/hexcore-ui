@@ -19,7 +19,7 @@
 
     try {
       activating.value = true
-      await $fetch('/api/nodes/active-party', {
+      await $fetch('/api/heads/activate', {
         method: 'POST',
         body: { id: props.head.id }
       })
@@ -41,7 +41,7 @@
   const handleDeactivateHead = async () => {
     try {
       onDeactivating.value = true
-      await $fetch('/api/nodes/deactive-head', {
+      await $fetch('/api/heads/deactivate', {
         method: 'POST',
         body: { id: props.head.id }
       })
@@ -61,7 +61,7 @@
   const handleClearPersistence = async () => {
     try {
       onClearing.value = true
-      await $fetch('/api/nodes/clear-head-persistences', {
+      await $fetch('/api/heads/clear-persistences', {
         method: 'POST',
         body: { ids: [props.head.id] }
       })

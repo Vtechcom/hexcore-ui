@@ -5,5 +5,6 @@ export type WalletAccount = {
   baseAddress: string
   pointerAddress: string
   createdAt: string
+  mnemonic: string
   utxo: UTxOObject
 }
