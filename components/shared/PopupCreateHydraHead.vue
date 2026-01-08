@@ -171,10 +171,10 @@
       const cardanoKeys = mnemonicToCliKey(mnemonic.split(' '))
       const hydraKeys = KeysUtils.hydraCliKeygen()
       return {
-        hydraHeadVkey: cardanoKeys.vk,
-        hydraHeadSkey: cardanoKeys.sk,
-        fundVkey: hydraKeys.vk.cborHex,
-        fundSkey: hydraKeys.sk.cborHex
+        hydraHeadVkey: hydraKeys.vk.cborHex,
+        hydraHeadSkey: hydraKeys.sk.cborHex,
+        fundVkey: cardanoKeys.vk,
+        fundSkey: cardanoKeys.sk
       }
     })
   }
