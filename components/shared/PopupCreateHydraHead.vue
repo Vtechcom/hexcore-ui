@@ -5,6 +5,7 @@
   import type { FormInstance, FormRules } from 'element-plus'
   import { mnemonicToCliKey } from '~/utils/keyHydra'
   import { KeysUtils } from '@hydra-sdk/core'
+  import axios from 'axios'
 
   const emit = defineEmits<{
     (e: 'success'): void
@@ -14,6 +15,7 @@
     // Step 1
     accountMnemonic: string[]
     description: string
+    blockfrostProjectId: string
     // Step 2
     contestationPeriod: number
     depositPeriod: number
@@ -32,6 +34,7 @@
   const defaultFormData: FormData = {
     accountMnemonic: [],
     description: '',
+    blockfrostProjectId: '',
     contestationPeriod: 120,
     depositPeriod: 720,
     persistenceRotateAfter: 15000,
@@ -45,6 +48,7 @@
   const hydraVersionOptions = ['1.1.0', '1.0.0']
 
   const isCreating = ref(false)
+  const isValidating = ref(false)
   const editMode = ref<'field' | 'json'>('field')
   const jsonConfig = ref('')
   const jsonError = ref('')
@@ -61,6 +65,7 @@
       { required: true, message: 'Please enter a persistence rotate after value', trigger: 'blur' }
     ],
     hydraVersion: [{ required: true, message: 'Please select a Hydra version', trigger: 'change' }],
+    blockfrostProjectId: [{ required: true, message: 'Please enter a Blockfrost Project ID', trigger: 'blur' }],
     'protocolParams.maxTxSize': [{ required: true, message: 'Please enter a max transaction size', trigger: 'blur' }],
     'protocolParams.maxBlockBodySize': [
       { required: true, message: 'Please enter a max block body size', trigger: 'blur' }
@@ -124,7 +129,13 @@
   const validateStep1 = async () => {
     if (currentStep.value === 0) {
       try {
-        await refForm.value?.validateField(['description', 'accountMnemonic'])
+        await refForm.value?.validateField(['description', 'accountMnemonic', 'blockfrostProjectId'])
+        // Validate Blockfrost API key
+        const isApiKeyValid = await validateBlockfrostApiKey(formData.value.blockfrostProjectId)
+        if (!isApiKeyValid) {
+          ElMessage.error('Invalid Blockfrost Project ID')
+          return
+        }
         currentStep.value = 1
         syncToJson()
       } catch {
@@ -158,6 +169,23 @@
       }
     }
     return false
+  }
+
+  const validateBlockfrostApiKey = async (key: string, network: string = 'preprod'): Promise<boolean> => {
+    try {
+      isValidating.value = true
+      await axios.get(`https://cardano-${network}.blockfrost.io/api/v0/metrics`, {
+        headers: {
+          project_id: key
+        }
+      })
+      return true
+    } catch {
+      console.error('Blockfrost API key validation failed')
+      return false
+    } finally {
+      isValidating.value = false
+    }
   }
 
   const handleBack = () => {
@@ -197,6 +225,7 @@
         contestationPeriod: formData.value.contestationPeriod,
         depositPeriod: formData.value.depositPeriod,
         persistenceRotateAfter: formData.value.persistenceRotateAfter,
+        blockfrostProjectId: formData.value.blockfrostProjectId,
         protocolParameters: {
           maxTxSize: formData.value.protocolParams.maxTxSize,
           maxBlockBodySize: formData.value.protocolParams.maxBlockBodySize
@@ -286,6 +315,21 @@
             </div>
           </el-form-item>
 
+          <el-form-item label="Blockfrost Project ID" prop="blockfrostProjectId">
+            <el-input
+              v-model="formData.blockfrostProjectId"
+              placeholder="Enter your Blockfrost Project ID"
+              class="w-full"
+            />
+            <div class="text-gray-7 mt-2 text-sm">
+              <span class="font-bold">Note:</span>
+              You can create an API key at
+              <nuxt-link href="https://blockfrost.io/" target="_blank" class="!text-blue-5 !underline"
+                >Blockfrost.io
+              </nuxt-link>
+            </div>
+          </el-form-item>
+
           <el-form-item label="Description" prop="description">
             <el-input
               v-model="formData.description"
@@ -364,7 +408,7 @@
       <div class="flex items-center justify-end p-4">
         <el-button v-if="currentStep === 0" @click="closePopup">Cancel</el-button>
         <el-button v-if="currentStep > 0" @click="handleBack">Back</el-button>
-        <el-button v-if="currentStep < 1" type="primary" @click="validateStep1">Next</el-button>
+        <el-button v-if="currentStep < 1" :loading="isValidating" type="primary" @click="validateStep1">Next</el-button>
         <el-button
           v-if="currentStep === 1"
           type="primary"
